@@ -18,6 +18,14 @@ from geometry_msgs.msg import Pose
 from mpmath import *
 from sympy import *
 
+import os 
+import sys
+
+os.path.pardir = "kuka_arm/scripts"
+sys.path.append(
+    os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
+
+from Kinematics import Kinematics
 
 def handle_calculate_IK(req):
     rospy.loginfo("Received %s eef-poses from the plan" % len(req.poses))
@@ -43,6 +51,20 @@ def handle_calculate_IK(req):
 	#
 	#
         ###
+        q1, q2, q3, q4, q5, q6, q7  = symbols('q1:8') # joint angles
+    	d1, d2, d3, d4, d5, d6, d7 = symbols('d1:8') # lik offset
+    	a0, a1, a2, a3, a4, a5, a6 = symbols('a0:7') # link lenght
+    	alpha0, alpha1, alpha2, alpha3, alpha4, alpha5, alpha6 = symbols('alpha0:7') # twist angles
+    
+    	theta1 = 0
+    	theta2 = 0
+    	theta3 = 0
+    	theta4 = 0
+    	theta5 = 0
+    	theta6 = 0
+    
+    	T0_1, T1_2, T2_3, T3_4, T4_5, T5_6,  T6_G, T0_EE = kinematics.create_individual_tf_matrices(q1, q2, q3, q4, q5, q6, q7, d1, d2, 							   d3, d4, d5, d6, d7, a0, a1, a2, a3, a4, a5, a6, alpha0, alpha1, alpha2,
+							   alpha3, alpha4, alpha5, alpha6)
 
         # Initialize service response
         joint_trajectory_list = []
@@ -69,7 +91,9 @@ def handle_calculate_IK(req):
 	    #
 	    #
             ###
-
+	    R_ee, WC = kinematics.calculate_wrist_center(roll, pitch, yaw, px, py, pz)
+            theta1, theta2, theta3, theta4, theta5, theta6 = kinematics.calculate_thetas
+								(WC, T0_1, T1_2, T2_3, R_ee, q1, q2, q3, q4, q5, q6, q7)
             # Populate response for the IK request
             # In the next line replace theta1,theta2...,theta6 by your joint angle variables
 	    joint_trajectory_point.positions = [theta1, theta2, theta3, theta4, theta5, theta6]
@@ -87,4 +111,6 @@ def IK_server():
     rospy.spin()
 
 if __name__ == "__main__":
+    global kinematics
+    kinematics = Kinematics()	  	
     IK_server()

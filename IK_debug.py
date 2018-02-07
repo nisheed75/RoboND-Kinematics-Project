@@ -2,7 +2,14 @@ from sympy import *
 from time import time
 from mpmath import radians
 import tf
+import os 
+import sys
 
+os.path.pardir = "kuka_arm/scripts"
+sys.path.append(
+    os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
+
+from Kinematics import Kinematics
 '''
 Format of test case is [ [[EE position],[EE orientation as quaternions]],[WC location],[joint angles]]
 You can generate additional test cases by setting up your kuka project and running `$ roslaunch kuka_arm forward_kinematics.launch`
@@ -64,12 +71,31 @@ def test_code(test_case):
 
     ## Insert IK code here!
     
+    q1, q2, q3, q4, q5, q6, q7  = symbols('q1:8') # joint angles
+    d1, d2, d3, d4, d5, d6, d7 = symbols('d1:8') # lik offset
+    a0, a1, a2, a3, a4, a5, a6 = symbols('a0:7') # link lenght
+    alpha0, alpha1, alpha2, alpha3, alpha4, alpha5, alpha6 = symbols('alpha0:7') # twist angles
+    
     theta1 = 0
     theta2 = 0
     theta3 = 0
     theta4 = 0
     theta5 = 0
     theta6 = 0
+    kinematics = Kinematics()
+    T0_1, T1_2, T2_3, T3_4, T4_5, T5_6,  T6_G, T0_EE = kinematics.create_individual_tf_matrices(q1, q2, q3, q4, q5, q6, q7, d1, d2, d3, d4, d5, d6, d7, a0, a1, a2, a3, a4, a5, a6, alpha0, alpha1, alpha2, alpha3, alpha4, alpha5, alpha6)
+
+    px = req.poses[x].position.x
+    py = req.poses[x].position.y
+    pz = req.poses[x].position.z
+
+    (roll, pitch, yaw) = tf.transformations.euler_from_quaternion(
+                [req.poses[x].orientation.x, req.poses[x].orientation.y,
+                    req.poses[x].orientation.z, req.poses[x].orientation.w])
+
+    R_ee, WC = kinematics.calculate_wrist_center(roll, pitch, yaw, px, py, pz)
+    theta1, theta2, theta3, theta4, theta5, theta6 = kinematics.calculate_thetas(WC, T0_1, T1_2, T2_3, R_ee, q1, q2, q3, q4, q5, q6, q7)
+		
 
     ## 
     ########################################################################################
@@ -79,13 +105,13 @@ def test_code(test_case):
     ## as the input and output the position of your end effector as your_ee = [x,y,z]
 
     ## (OPTIONAL) YOUR CODE HERE!
-
+    FK = T0_EE.evalf(subs={q1: theta1, q2: theta2, q3: theta3, q4: theta4, q5: theta5, q6: theta6})	
     ## End your code input for forward kinematics here!
     ########################################################################################
 
     ## For error analysis please set the following variables of your WC location and EE location in the format of [x,y,z]
-    your_wc = [1,1,1] # <--- Load your calculated WC values in this array
-    your_ee = [1,1,1] # <--- Load your calculated end effector value from your forward kinematics
+    your_wc = [WC[0],WC[1],WC[2]] # <--- Load your calculated WC values in this array
+    your_ee = [FK[0,3],FK[1,3],FK[2,3]] # <--- Load your calculated end effector value from your forward kinematics
     ########################################################################################
 
     ## Error analysis
