@@ -19,13 +19,13 @@ class Kinematics(object):
         # DH Parameters
         
 
-        dh_table = {alpha0:     0, a0:           0, d1:      0.75, q1: q1,
-             alpha1: -pi/2., a1:        0.35, d2:         0, q2: -pi/2.+q2, 
-             alpha2:     0,  a2:       1.25, d3:         0, q3: q3,
-             alpha3: -pi/2., a3:      -0.054, d4:       1.5, q4: q4,
-             alpha4: pi/2., a5:           0, d5:         0, q5: q5,
-             alpha5: -pi/2., a4:           0, d6:         0, q6: q6,
-             alpha6:     0, a6:           0, d7:     0.303, q7:0}
+        dh_table = {alpha0:      0, a0:           0, d1:      0.75, q1:        q1,
+                    alpha1: -pi/2., a1:        0.35, d2:         0, q2: -pi/2.+q2, 
+                    alpha2:      0, a2:        1.25, d3:         0, q3:        q3,
+                    alpha3: -pi/2., a3:      -0.054, d4:       1.5, q4:        q4,
+                    alpha4:  pi/2., a5:           0, d5:         0, q5:        q5,
+                    alpha5: -pi/2., a4:           0, d6:         0, q6:        q6,
+                    alpha6:      0, a6:           0, d7:     0.303, q7:         0}
 
         return  dh_table
         
@@ -95,7 +95,7 @@ class Kinematics(object):
     	angle_c = acos((side_a * side_a + side_b * side_b - side_c * side_c) / (2 * side_a * side_b))
 
     	theta2 = pi/2 - angle_a - atan2(WC[2] - 0.75, sqrt(WC[0] * WC[0] + WC[1]*WC[1]) - 0.35)
-    	theta3 = pi/2 - (angle_b + 0.036)
+        theta3 = pi/2 - (angle_b + 0.036)
 
     	R0_3 = T0_1[0:3, 0:3] * T1_2[0:3, 0:3] * T2_3[0:3, 0:3]
     	R0_3 = R0_3.evalf(subs={q1: theta1, q2: theta2, q3: theta3})
@@ -105,4 +105,12 @@ class Kinematics(object):
     	theta5 = atan2(sqrt(R3_6[0,2] * R3_6[0,2] + R3_6[2,2]*R3_6[2,2]), R3_6[1,2])  	
     	theta6 = atan2(-R3_6[1,1], R3_6[1,0]) 	
 	
+	# select best solution based on theta5
+        if (theta5 > pi) :
+            theta4 = atan2(-R3_6[2,2], R3_6[0,2])
+            theta6 = atan2(R3_6[1,1],-R3_6[1,0])
+        else:
+            theta4 = atan2(R3_6[2,2], -R3_6[0,2])
+            theta6 = atan2(-R3_6[1,1],R3_6[1,0])
+
 	return theta1, theta2, theta3, theta4, theta5, theta6

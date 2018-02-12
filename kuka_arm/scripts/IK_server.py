@@ -56,13 +56,7 @@ def handle_calculate_IK(req):
     	a0, a1, a2, a3, a4, a5, a6 = symbols('a0:7') # link lenght
     	alpha0, alpha1, alpha2, alpha3, alpha4, alpha5, alpha6 = symbols('alpha0:7') # twist angles
     
-    	theta1 = 0
-    	theta2 = 0
-    	theta3 = 0
-    	theta4 = 0
-    	theta5 = 0
-    	theta6 = 0
-    
+    	    
     	T0_1, T1_2, T2_3, T3_4, T4_5, T5_6,  T6_G, T0_EE = kinematics.create_individual_tf_matrices(q1, q2, q3, q4, q5, q6, q7, d1, d2, 							   d3, d4, d5, d6, d7, a0, a1, a2, a3, a4, a5, a6, alpha0, alpha1, alpha2,
 							   alpha3, alpha4, alpha5, alpha6)
 
@@ -92,11 +86,21 @@ def handle_calculate_IK(req):
 	    #
             ###
 	    R_ee, WC = kinematics.calculate_wrist_center(roll, pitch, yaw, px, py, pz)
-            theta1, theta2, theta3, theta4, theta5, theta6 = kinematics.calculate_thetas
-								(WC, T0_1, T1_2, T2_3, R_ee, q1, q2, q3, q4, q5, q6, q7)
+            theta1, theta2, theta3, theta4, theta5, theta6 = kinematics.calculate_thetas(WC, T0_1, T1_2, T2_3, R_ee, q1, q2, q3, q4, q5, q6, q7)
+	    #if x >= len(req.poses):
+		#theta5 = theta5_fin
+		#theta6 = theta6_fin
+
+	    theta1_fin = theta1
+            theta2_fin = theta2
+            theta3_fin = theta3
+            theta4_fin = 0 #theta4
+            theta5_fin = 0 #theta5
+            theta6_fin = 0 #theta6
+
             # Populate response for the IK request
             # In the next line replace theta1,theta2...,theta6 by your joint angle variables
-	    joint_trajectory_point.positions = [theta1, theta2, theta3, theta4, theta5, theta6]
+	    joint_trajectory_point.positions = [theta1_fin, theta2_fin, theta3_fin, theta4_fin, theta5_fin, theta6_fin]
 	    joint_trajectory_list.append(joint_trajectory_point)
 
         rospy.loginfo("length of Joint Trajectory List: %s" % len(joint_trajectory_list))
