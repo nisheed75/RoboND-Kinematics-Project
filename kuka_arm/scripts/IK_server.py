@@ -94,9 +94,9 @@ def handle_calculate_IK(req):
 	    theta1_fin = theta1
             theta2_fin = theta2
             theta3_fin = theta3
-            theta4_fin = 0 #theta4
-            theta5_fin = 0 #theta5
-            theta6_fin = 0 #theta6
+            theta4_fin = theta4
+            theta5_fin = theta5
+            theta6_fin = theta6
 
             # Populate response for the IK request
             # In the next line replace theta1,theta2...,theta6 by your joint angle variables

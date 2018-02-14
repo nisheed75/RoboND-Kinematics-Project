@@ -7,10 +7,10 @@ class Kinematics(object):
     """description of class"""
 
     def transformation_matrix(self, q, d, a, alpha):
-        return Matrix([[                     cos(q),              -sin(q),           0,              a],
-                       [           sin(q)*cos(alpha),    cos(q)*cos(alpha), -sin(alpha), -sin(alpha) *d],
-                       [      sin(q)*sin(alpha),    cos(q)*sin(alpha),  cos(alpha),  cos(alpha)*d],
-                       [                0,                    0,           0,               1]])
+        return Matrix([[            cos(q),              -sin(q),           0,              a],
+                       [ sin(q)*cos(alpha),    cos(q)*cos(alpha), -sin(alpha), -sin(alpha) *d],
+                       [ sin(q)*sin(alpha),    cos(q)*sin(alpha),  cos(alpha),   cos(alpha)*d],
+                       [                 0,                    0,           0,              1]])
 
     def get_dh_table(self, q1, q2, q3, q4, q5, q6, q7, d1, d2, d3, d4, d5, d6, d7, a0, a1, a2, a3, a4, a5, a6, 
 		         alpha0, alpha1, alpha2, alpha3, alpha4, alpha5, alpha6):
@@ -43,7 +43,18 @@ class Kinematics(object):
         T5_6 = self.transformation_matrix(q6, d6, a5, alpha5).subs(dh_table)
         T6_G = self.transformation_matrix(q7, d7, a6, alpha6).subs(dh_table)
         
-        T0_EE = T0_1 * T1_2 * T2_3 * T3_4 * T4_5 * T5_6 * T6_G
+        T0_EE = (T0_1 * T1_2 * T2_3 * T3_4 * T4_5 * T5_6 * T6_G)
+	# Correction Needed to Account for Orientation Difference Between
+        # Definition of Gripper Link_G in URDF versus DH Convention.
+        # Matrix is pre-calculated to improve performance.
+        R_corr = Matrix([[0,0,1.0,0],[0,-1.0,0,0],[1.0,0,0,0],[0,0,0,1.0]])
+
+        # Total Homogeneous Transform Between (Base) Link_0 and (End Effector) Link_7
+        # With orientation correction applied
+	
+	# Total Homogeneous Transform between bse_link and gripper_ink with orientation correction applied
+        T0_ee = simplify(T0_EE * R_corr)
+        
         return T0_1, T1_2, T2_3, T3_4, T4_5, T5_6,  T6_G, T0_EE
     
     def calculate_wrist_center(self, roll, pitch, yaw, px, py, pz):
@@ -79,38 +90,42 @@ class Kinematics(object):
                      [pz]])
 
         WC = EE - (0.303) * R_ee[:,2]
-        return R_ee, WC
-        # Total Homogeneous Transform between bse_link and gripper_ink with orientation correction applied
-        #T_total = simplify(T0_G * R_corr)
+	
+  	       
+	return R_ee, WC
+        
     
     def calculate_thetas(self, WC, T0_1, T1_2, T2_3, R_ee, q1, q2, q3, q4, q5, q6, q7):
 	theta1 = atan2(WC[1], WC[0])
+        # find the 3rd side of the triangle
+	A = 1.501        
+	B = sqrt(pow((sqrt(WC[0]*WC[0] + WC[1]*WC[1]) - 0.35), 2) + pow((WC[2] - 0.75), 2))
+	C = 1.25
+        #Cosine Laws SSS to find all inner angles of the triangle
+        a = acos((B * B + C * C - A * A) / (2 * B * C))
+        b = acos((A * A + C * C - B * B) / (2 * A * C))
+        c = acos((A * A + B * B - C * C) / (2 * A * B))
+        #Find theta2 and theta3
+        theta2 = pi/2 - a - atan2(WC[2]-0.75, sqrt(WC[0]*WC[0]+WC[1]*WC[1])-0.35)
+        theta3 = pi/2 - (b+0.036) # 0.036 accounts for sag in link4 of -0.054m
 
-    	side_a = 1.501
-    	side_b = sqrt(pow((sqrt(WC[0] * WC[0] + WC[1] *WC[1]) - 0.35), 2) + pow((WC[2] -0.75), 2))
-    	side_c = 1.25
+        # Extract rotation matrices from the transformation matrices
+        # Extract rotation matrix R0_3 from transformation matrix T0_3 then substitute angles q1-3
+        R0_3 = T0_1[0:3,0:3] * T1_2[0:3,0:3] * T2_3[0:3,0:3]
+        R0_3 = R0_3.evalf(subs={q1: theta1, q2: theta2, q3:theta3})
+                       
+        # Get rotation matrix R3_6 from (transpose of R0_3 * R_EE)
+        R3_6 = R0_3.transpose() * R_ee
 
-    	angle_a = acos((side_b * side_b + side_c * side_c - side_a * side_a) / (2 * side_b * side_c))
-    	angle_b = acos((side_a * side_a + side_c * side_c - side_b * side_b) / (2 * side_a * side_c))
-    	angle_c = acos((side_a * side_a + side_b * side_b - side_c * side_c) / (2 * side_a * side_b))
-
-    	theta2 = pi/2 - angle_a - atan2(WC[2] - 0.75, sqrt(WC[0] * WC[0] + WC[1]*WC[1]) - 0.35)
-        theta3 = pi/2 - (angle_b + 0.036)
-
-    	R0_3 = T0_1[0:3, 0:3] * T1_2[0:3, 0:3] * T2_3[0:3, 0:3]
-    	R0_3 = R0_3.evalf(subs={q1: theta1, q2: theta2, q3: theta3})
-    	R3_6 = R0_3.inv("LU") * R_ee
-
-    	theta4 = atan2(R3_6[2,2], -R3_6[0,2])
-    	theta5 = atan2(sqrt(R3_6[0,2] * R3_6[0,2] + R3_6[2,2]*R3_6[2,2]), R3_6[1,2])  	
-    	theta6 = atan2(-R3_6[1,1], R3_6[1,0]) 	
-	
-	# select best solution based on theta5
+        # Euler angles from rotation matrix
+        theta5 = atan2(sqrt(R3_6[0,2]*R3_6[0,2] + R3_6[2,2]*R3_6[2,2]),R3_6[1,2])
+            
+        # select best solution based on theta5
         if (theta5 > pi) :
             theta4 = atan2(-R3_6[2,2], R3_6[0,2])
             theta6 = atan2(R3_6[1,1],-R3_6[1,0])
         else:
             theta4 = atan2(R3_6[2,2], -R3_6[0,2])
             theta6 = atan2(-R3_6[1,1],R3_6[1,0])
-
+    	
 	return theta1, theta2, theta3, theta4, theta5, theta6
