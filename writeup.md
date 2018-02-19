@@ -47,15 +47,6 @@ You'll need to setup an environemnt with the following:
 [image2]: ./misc_images/misc3.png
 [image3]: ./misc_images/misc2.png
 
-## [Rubric](https://review.udacity.com/#!/rubrics/972/view) Points
-### Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
-
----
-### Writeup / README
-
-#### 1. Provide a Writeup / README that includes all the rubric points and how you addressed each one.  You can submit your writeup as markdown or pdf.  
-
-You're reading it!
 
 ### Kinematic Analysis
 #### 1. Run the forward_kinematics demo and evaluate the kr210.urdf.xacro file to perform kinematic analysis of Kuka KR210 robot and derive its DH parameters.
@@ -66,15 +57,15 @@ Here is an example of how to include an image in your writeup.
 
 #### 2. Using the DH parameter table you derived earlier, create individual transformation matrices about each joint. In addition, also generate a generalized homogeneous transform between base_link and gripper_link using only end-effector(gripper) pose.
 
-Links | alpha(i-1) | a(i-1) | d(i-1) | theta(i)
---- | --- | --- | --- | ---
-0->1 | 0 | 0 | L1 | qi
-1->2 | - pi/2 | L2 | 0 | -pi/2 + q2
-2->3 | 0 | 0 | 0 | 0
-3->4 |  0 | 0 | 0 | 0
-4->5 | 0 | 0 | 0 | 0
-5->6 | 0 | 0 | 0 | 0
-6->EE | 0 | 0 | 0 | 0
+Links | i | alpha(i-1) | a(i-1) | d(i) | theta(i) |
+:---: | :---: | :---: | :---: | :---: | :---: |
+0->1 | 1 | 0 | 0 | 0.75 | q1 |
+1->2 | 2 | -90 | 0.35 | 0 | -90+q2 |
+2->3 | 3 | 0 |  | 1.25 | q3 |
+3->4 | 4 | -90 | -0.05 | 1.5 | q4 |
+4->5 | 5 | 90 | 0 | 0 | q5 |
+5->6 | 6 | -90 | 0 | 0 | q6 |
+6->7 | 7 | 0 | 0 | 0.303 | q7 |
 
 
 #### 3. Decouple Inverse Kinematics problem into Inverse Position Kinematics and inverse Orientation Kinematics; doing so derive the equations to calculate all individual joint angles.
