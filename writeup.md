@@ -3,6 +3,10 @@
 Nisheed Rama
 18 Feb 2018
 ---
+[//]: # (Image References)
+
+[image1]: https://github.com/nisheed75/RoboND-Kinematics-Project/blob/master/images/Kuka_KR210.jpg
+[image2]: https://github.com/nisheed75/RoboND-Kinematics-Project/blob/master/images/KR210-simple.jpg
 
 ### Environment Setup
 
@@ -41,20 +45,44 @@ You'll need to setup an environemnt with the following:
 | 16. | To run simulator use: | `$ rosrun kuka_arm safe_spawner.sh ` |
 | 17. | To run IK Server use: | `$ rosrun kuka_arm IK_server.py ` |
 
-[//]: # (Image References)
-
-[image1]: ./misc_images/misc1.png
-[image2]: ./misc_images/misc3.png
-[image3]: ./misc_images/misc2.png
 
 
 ### Kinematic Analysis
 #### 1. Run the forward_kinematics demo and evaluate the kr210.urdf.xacro file to perform kinematic analysis of Kuka KR210 robot and derive its DH parameters.
 
-Here is an example of how to include an image in your writeup.
+To get the DH parameter you need to look at the URDF file `kr210.urdf.xacro` and find the joints defintions, for example:
+```xml
+ <!-- joints -->
+  <joint name="fixed_base_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+```
+Each joint definiton has an  **origin** tag that has the x, y ,z and the roll, yaw and pitch values:
+```xml
+<origin xyz="0 0 0" rpy="0 0 0"/>
+```
+The Kuka KR 210 arm has the following specification, I've drawn a schematic with the joints and link and plotted the X, Z axes in the diagram below. <br>  
 
-![alt text][image1]
+![Schematic Kuka_KR210][image1]
 
+Looking at the definiton in the  URDF file `kr210.urdf.xacro`  you can extract the parameters for the joint, links and gripper: <br>
+O | joint | parent | child | x | y | z | r | p | y |
+--- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+0 | fixed_base | base_footprint | base_link | 0 | 0 | 0 | 0 | 0 | 0 |
+1 | joint_1 | base_link | link_1 | 0 | 0 | 0.33 | 0 | 0 | 0 |
+2 | joint_2 | link_1 | link_2 | 0 .35| 0 | 0.42 | 0 | 0 | 0 |
+3 | joint_3 | link_2 | link_3 | 0 | 0 | 1.25 | 0 | 0 | 0 |
+4 | joint_4 | link_3 | link_4 | 0.96 | 0 | -0.054 | 0 | 0 | 0 |
+5 | joint_5 | link_4 | link_5 | 0.54 | 0 | 0 | 0 | 0 | 0 |
+6 | joint_6 | link_5 | link_6 | 0.193 | 0 | 0 | 0 | 0 | 0 |
+7 | gripper | link_6 | gripper_link | 0.11 | 0 | 0 | 0 | 0 | 0 |
+. | **Total (m)** |  |  | **2.153** | 0 | **1.946** | 0 | 0 | 0 |
+
+To simplify the tanslation i combine the last three joints (4,5, and 6) in in joint_5 since their axes in actual KR210 robot intersect at a single point which represent the center of the robot spherical wrist, it will look like the diagram below:
+![Schematic Kuka_KR210 - Simple][image2]
+ 
 #### 2. Using the DH parameter table you derived earlier, create individual transformation matrices about each joint. In addition, also generate a generalized homogeneous transform between base_link and gripper_link using only end-effector(gripper) pose.
 
 Links | i | alpha(i-1) | a(i-1) | d(i) | theta(i) |
