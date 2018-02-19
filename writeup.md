@@ -25,7 +25,7 @@ Nisheed Rama
 To setup you VM [click here](https://classroom.udacity.com/nanodegrees/nd209/parts/c199593e-1e9a-4830-8e29-2c86f70f489e/modules/2919466f-aa2b-4424-b86a-98b0a53ce335/lessons/2cd33882-d29e-43e8-9ff7-10398c8b5351/concepts/undefined)
 
 ##### Others
-You'll need to setup an environemnt with the following:
+You'll need to setup an environment with the following:
 1. Ubuntu 16.04 LTS OS (https://www.ubuntu.com/download/desktop?cp=close)
 1. ROS Kinetic 1.12.12 (http://wiki.ros.org/kinetic/Installation)
 1. Gazebo 7.9 (http://gazebosim.org/download)
@@ -77,7 +77,7 @@ The Kuka KR 210 arm has the following specification, I've drawn a schematic with
 
 ![Schematic Kuka_KR210][image1]
 
-Looking at the definiton in the  URDF file `kr210.urdf.xacro`  you can extract the parameters for the joint, links and gripper: <br>
+Looking at the definition in the  URDF file `kr210.urdf.xacro`  you can extract the parameters for the joint, links and gripper: <br>
 
 | O | joint | parent | child | x | y | z | r | p | y |
 |---|---|---|---|---|---|---|---|---|---|
@@ -91,7 +91,7 @@ Looking at the definiton in the  URDF file `kr210.urdf.xacro`  you can extract t
 |7 | gripper | link_6 | gripper_link | 0.11 | 0 | 0 | 0 | 0 | 0 |
 |. | **Total (m)** |  |  | **2.153** | 0 | **1.946** | 0 | 0 | 0 |
 
-To simplify the translation I combine the last three joints (4, 5, and 6) at joint_5 since their axes intersect at a single point which represent the center of the robot spherical wrist, it will look like the diagram below:
+To simplify the translation I combine the last three joints (4, 5, and 6) at joint_5 since their axes intersect at a single point which represents the center of the robot spherical wrist, it will look like the diagram below:
 ![Schematic Kuka_KR210 - Simple][image2]
  
  #### Note that:
@@ -108,7 +108,7 @@ To simplify the translation I combine the last three joints (4, 5, and 6) at joi
 
 **Gripper frame:** is the end point is the focal point for the Kinematic. It is displaced from Frame 6 by a translation along Z(6).
 
-#### 2. Using the DH parameter table you derived earlier, create individual transformation matrices about each joint. In addition, also generate a generalized homogeneous transform between base_link and gripper_link using only end-effector(gripper) pose.
+#### 2. Using the DH parameter table, you derived earlier, create individual transformation matrices about each joint. Also, generate a generalized homogeneous transform between base_link and gripper_link using only end-effector(gripper) pose.
 
 The code of all my Kinematics can be found in the following file `/kuka_arm/scripts/Kinematics.py`
 
@@ -124,11 +124,11 @@ Using the data and formulas described in question 1 you can derive the following
 |5->6 | 6 | -90 | 0 | 0 | q6 |
 |6->7 | 7 | 0 | 0 | 0.303 | q7 |
 
-To define the transformation matrix we can create the individual transforms between links, the DH convention uses four individual transforms define by the formulas below: 
+To define the transformation matrix we can create the individual transforms between links, the DH convention uses four individual transforms defined by the formulas below: 
 ![equation 1][image3]
 ![equation 2][image4]
 
-Once you have the table above and the transformation matrix above you can define the individual transformation between link by substituting the variable in the matrix with the values for each row in the table: e.g. the transformation from 6->7 will use the following values and substitute this in the transformation matrix. here is a code example of the individual transformation matrices:
+Once you have the table above and the transformation matrix above you can define the individual transformation between link by substituting the variable in the matrix with the values for each row in the table: e.g. the transformation from 6->7 will use the following values and substitute this in the transformation matrix. Here is a code example of the individual transformation matrices:
 ``` python
         T0_1 = self.transformation_matrix(q1, d1, a0, alpha0).subs(dh_table)
         T1_2 = self.transformation_matrix(q2, d2, a1, alpha1).subs(dh_table)
@@ -140,7 +140,7 @@ Once you have the table above and the transformation matrix above you can define
 ```
 #### 3. Decouple Inverse Kinematics problem into Inverse Position Kinematics and inverse Orientation Kinematics; doing so derive the equations to calculate all individual joint angles.
 
-The inverse kinematics problem was resolved analytically by dividing the problem in two parts: <br>
+The inverse kinematics problem was resolved analytically by dividing the problem into two parts: <br>
 1. Find the first 3 joint angles (counting from the base) from the pose position and 
 1. Find the remaining 3 wrist joint angles from the pose orientation.
 
@@ -148,9 +148,9 @@ The inverse kinematics problem was resolved analytically by dividing the problem
 Find the poisiton of the wrist given the end-effector coordinate <br>
 ![Gripper Ref Frame 1][image5]
 
-To resove this you need to crearte a correction roation that is composed of a roation on the z axis by 180 degrees followed by a rotation on the Y axis by -90 degrees.
+To resolve this you need to create a correction rotation that is composed of a rotation on the z-axis by 180 degrees followed by rotation on the Y axis by -90 degrees.
 
-Then perform a roation in the opposite direction of the gropper link to find the wrist center.
+Then perform a rotation in the opposite direction of the gripper link to find the wrist center.
 ![Gripper Ref Frame 2][image6]
 <br>
 
@@ -171,19 +171,35 @@ To calculate joints 2 and 3 just use the law of cosines as defined in the pictur
 To calculate the rotation matrix from 0 to 3 the operation is defined by the following equation: <br>
 ![archtan eq][image11]
 
-Inverting a matrix is complex and can ne numerically unstable. To avoid this issue we use the principle that rotation matrices are orthoganal and the transpose is equal to it inverse.
+Inverting a matrix is complex and can be numerically unstable. To avoid this issue we use the principle that rotation matrices are orthogonal and the transpose is equal to it inverse.
 ![archtan eq][image12]
 
 
 ### Project Implementation
 
-#### 1. Fill in the `IK_server.py` file with properly commented python code for calculating Inverse Kinematics based on previously performed Kinematic Analysis. Your code must guide the robot to successfully complete 8/10 pick and place cycles. Briefly discuss the code you implemented and your results. 
+#### 1. Fill in the `IK_server.py` File with properly commented python code for calculating Inverse Kinematics based on previously performed Kinematic Analysis. Your code must guide the robot to complete 8/10 pick and place cycles. Briefly discuss the code you implemented and your results. 
 
+##### Implementation 
+All my Kinematics code is in the following file `/kuka_arm/scripts/Kinematics.py`. In my IK_server my code does the following:
+1. Initiate a version of my Kinematics object and call the handle_calculate_ik function to calculate the inverse kinematics.
+2. Once I get a valid end-effector pose I do the following:
+* create the symbolic links
+* define the individual transformation matrices for ' T0_1, T1_2, T2_3, T3_4, T4_5, T5_6,  T6_G, T0_EE '
+3. Then I enter a loop where the IK is calculated
+* In this loop I calculate wrist center to do this the following is done:
+** Construct R_ee from the roll pitch and yaw and the end-effector position. 
+** This is passed to the method called 'kinematics.calculate_wrist_center(roll, pitch, yaw, px, py, pz) ' that performs the correction I describe above
+** Using the R_x, R_y and R_z matrices and R_ee it calculates the WC
+* After the WC is calculated the calculate thetas function is called  ' kinematics.calculate_thetas(WC, T0_1, T1_2, T2_3, R_ee, q1, q2, q3, q4, q5, q6, q7)'. Refer to the code for more details and the math used is described in 3 above.
+** The code calculates theta 1, 2 & 3 first
+** After that the theta 4, 5, 6 is calculated.
+** Theta 4, 6 was calculated based on what the value of theta 5 to find the best angles for 4 and 6.   
 
-Here I'll talk about the code, what techniques I used, what worked and why, where the implementation might fail and how I might improve it if I were going to pursue this project further.  
+##### Result Discussion 
+What an amazing thing to see it pick up the object and place it in the bin. In my two runs of the code, i was able to successfully pickup 8/10 objects. 
 
-
-And just for fun, another example image:
-![alt text][image3]
-
+##### Areas of Improvement
+1. My arm arrive at the correct point everytime but the route it takes to get there is sometimes really odd and hence it can take longer than expected to get into positon
+1. This also causes the arm to knock over objects 
+1. I need to investigate this as I really don't understand why this is happening. 
 
