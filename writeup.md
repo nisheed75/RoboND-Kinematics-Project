@@ -19,94 +19,27 @@ You'll need to setup an environemnt with the following:
 
 
 ###### Set up your ROS Workspace.
-1. Download or clone the [project repository](https://github.com/nisheed75/RoboND-Kinematics-Project.git) into the ***src*** directory of your ROS Workspace. 
-```sh
-  cd ~/catkin_ws/src
-  git clone https://github.com/nisheed75/RoboND-Kinematics-Project.git 
-```
-1. As this project uses custom Gazebo 3D models, we need to add the path through environment variable: 
-```sh* As this project uses custom Gazebo 3D models, we need to add the path through environment variable: 
-```sh
-$ echo "export GAZEBO_MODEL_PATH=~/catkin_ws/src/kuka_arm/models" >> ~/.bashrc
-```
-1. Install missing ROS dependencies using the `rosdep` install command:
-```sh
-$ cd ~/catkin_ws/
-$ rosdep install --from-paths src --ignore-src --rosdistro=kinetic -y
-```
-1. Run catkin_make from within your workspace to build the project:
-```sh
-$ cd ~/catkin_ws/
-$ catkin_make
-```
-1. Run the following shell commands to source the setup files:
-```sh
-$ echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc
-```
-1. Run the following shell commands to source the setup files:
-```sh
-$ echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc
-```
-
-1. For demo mode make sure the demo flag is set to `true` in `inverse_kinematics.launch` file under `~/catkin_ws/src/kuka_arm/launch/`
-
-
-1. You can also control the spawn location of the target object in the shelf by modifying the spawn_location argument in `target_description.launch` file under `~/catkin_ws/src/kuka_arm/launch/`. 0-9 are valid values for spawn_location with 0 being random mode.
-
-1. To run forward kinematics test us:
-```sh
-$ roslaunch kuka_arm forward_kinematics.launch
-```
-
-1. To run simulator use:
-```sh
-$ rosrun kuka_arm safe_spawner.sh
-```
-
-1. To run IK Server use:
-```sh
-$ rosrun kuka_arm IK_server.py 
-```
-$ echo "export GAZEBO_MODEL_PATH=~/catkin_ws/src/kuka_arm/models" >> ~/.bashrc
-```
-
-1. Install missing ROS dependencies using the `rosdep` install command:
-```sh
-$ cd ~/catkin_ws/
-$ rosdep install --from-paths src --ignore-src --rosdistro=kinetic -y
-```
-
-1. Run catkin_make from within your workspace to build the project:
-```sh
-$ cd ~/catkin_ws/
-$ catkin_make
-```
-
-1. Run the following shell commands to source the setup files:
-```sh
-$ echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc
-```
-
-1. For demo mode make sure the demo flag is set to `true` in `inverse_kinematics.launch` file under `~/catkin_ws/src/kuka_arm/launch/`
-
-
-1. You can also control the spawn location of the target object in the shelf by modifying the spawn_location argument in `target_description.launch` file under `~/catkin_ws/src/kuka_arm/launch/`. 0-9 are valid values for spawn_location with 0 being random mode.
-
-1. To run forward kinematics test us:
-```sh
-$ roslaunch kuka_arm forward_kinematics.launch
-```
-
-1. To run simulator use:
-```sh
-$ rosrun kuka_arm safe_spawner.sh
-```
-
-1. To run IK Server use:
-```sh
-$ rosrun kuka_arm IK_server.py 
-```
-
+| Step | Action | Command |
+|---|---|---|
+| 1. | Download or clone the [project repository](https://github.com/nisheed75/RoboND-Kinematics-Project.git) into the ***src*** directory of your ROS Workspace. |  ` cd ~/catkin_ws/src ` <br>  ` git clone https://github.com/nisheed75/RoboND-Kinematics-Project.git ` |
+| 2. | As this project uses custom Gazebo 3D models, we need to add the path through environment variable: | `$ echo "export GAZEBO_MODEL_PATH=~/catkin_ws/src/kuka_arm/models" >> ~/.bashrc ` |
+| 3. | Install missing ROS dependencies using the `rosdep` install command: |  ` $ cd ~/catkin_ws/ ` <br> ` $ rosdep install --from-paths src --ignore-src --  rosdistro=kinetic -y ` |
+| 4. | Run catkin_make from within your workspace to build the project: | ` $ cd ~/catkin_ws/ <br> $ catkin_make ` |
+| 5. | Run the following shell commands to source the setup files: | ` $ echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc ` |
+| 6. | For demo mode make sure the demo flag is set to `true` in `inverse_kinematics.launch` file under | ` ~/catkin_ws/src/kuka_arm/launch/ ` |
+| 7. | You can also control the spawn location of the target object in the shelf by modifying the spawn_location argument in `target_description.launch` file under `~/catkin_ws/src/kuka_arm/launch/`. 0-9 are valid values for spawn_location with 0 being random mode.| |
+| 8. | To run forward kinematics test us: | `$ roslaunch kuka_arm forward_kinematics.launch `|
+| 9. | To run simulator use: | ` $ rosrun kuka_arm safe_spawner.sh ` |
+| 10. | To run IK Server use: | `$ rosrun kuka_arm IK_server.py <br> $ echo "export GAZEBO_MODEL_PATH=~/catkin_ws/src/kuka_arm/models" >> ~/.bashrc ` |
+| 12. | Install missing ROS dependencies using the `rosdep` install command: | ` $ cd ~/catkin_ws/ <br> $ rosdep install --from-paths src --ignore-src --rosdistro=kinetic -y ` |
+| 12. | Run catkin_make from within your workspace to build the project: | ` $ cd ~/catkin_ws/ <br> $ catkin_make ` |
+| 13. | Run the following shell commands to source the setup files: | ` $ echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc
+` |
+| 14. | For demo mode make sure the demo flag is set to `true` in `inverse_kinematics.launch` file under | `~/catkin_ws/src/kuka_arm/launch/` |
+| 15. | You can also control the spawn location of the target object in the shelf by modifying the spawn_location argument in `target_description.launch` file under `~/catkin_ws/src/kuka_arm/launch/`. 0-9 are valid values for spawn_location with 0 being random mode. | |
+| 15. | To run forward kinematics test us: | `$ roslaunch kuka_arm forward_kinematics.launch `|
+| 16. | To run simulator use: | `$ rosrun kuka_arm safe_spawner.sh ` |
+| 17. | To run IK Server use: | `$ rosrun kuka_arm IK_server.py ` |
 
 [//]: # (Image References)
 
