@@ -15,6 +15,8 @@ Nisheed Rama
 [image8]: https://github.com/nisheed75/RoboND-Kinematics-Project/blob/master/misc_images/arc_tan.png
 [image9]: https://github.com/nisheed75/RoboND-Kinematics-Project/blob/master/misc_images/arch_tan.gif
 [image10]: https://github.com/nisheed75/RoboND-Kinematics-Project/blob/master/misc_images/law_of_cos.png
+[image11]: https://github.com/nisheed75/RoboND-Kinematics-Project/blob/master/misc_images/inv_orin_kine1.png
+[image12]: https://github.com/nisheed75/RoboND-Kinematics-Project/blob/master/misc_images/inv_orin_kine2.png
 
 ### Environment Setup
 
@@ -164,6 +166,14 @@ Once the wrist center is calculated we can then calcualte the first joint using 
 
 To calculate joints 2 and 3 just use the law of cosines as defined in the picture below:
 ![law of cosines][image10]
+
+##### Inverse Orientation Kinematics
+To calculate the rotation matrix from 0 to 3 the operation is defined by the following equation: <br>
+![archtan eq][image11]
+
+Inverting a matrix is complex and can ne numerically unstable. To avoid this issue we use the principle that rotation matrices are orthoganal and the transpose is equal to it inverse.
+![archtan eq][image12]
+
 
 ### Project Implementation
 
