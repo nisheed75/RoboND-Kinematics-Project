@@ -121,7 +121,16 @@ To define the transformation matrix we can create the individual transforms betw
 ![equation 1][image3]
 ![equation 2][image4]
 
-
+Once you have the table above and the transfomation mateix above you can define the individual transformation bwtween link by substiting the variable in the matix with the values for each row in the table: e.g. the transformation from 6->7 will use the follwoing values amd substitutre this in the transformation matix. here is a code exmple of the individual transformation matices:
+``` python
+        T0_1 = self.transformation_matrix(q1, d1, a0, alpha0).subs(dh_table)
+        T1_2 = self.transformation_matrix(q2, d2, a1, alpha1).subs(dh_table)
+        T2_3 = self.transformation_matrix(q3, d3, a2, alpha2).subs(dh_table)
+        T3_4 = self.transformation_matrix(q4, d4, a3, alpha3).subs(dh_table)
+        T4_5 = self.transformation_matrix(q5, d5, a4, alpha4).subs(dh_table)
+        T5_6 = self.transformation_matrix(q6, d6, a5, alpha5).subs(dh_table)
+        T6_G = self.transformation_matrix(q7, d7, a6, alpha6).subs(dh_table)
+```
 #### 3. Decouple Inverse Kinematics problem into Inverse Position Kinematics and inverse Orientation Kinematics; doing so derive the equations to calculate all individual joint angles.
 
 And here's where you can draw out and show your math for the derivation of your theta angles. 
