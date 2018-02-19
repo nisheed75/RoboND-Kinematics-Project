@@ -108,7 +108,7 @@ To simplify the translation I combine the last three joints (4, 5, and 6) at joi
 
 #### 2. Using the DH parameter table you derived earlier, create individual transformation matrices about each joint. In addition, also generate a generalized homogeneous transform between base_link and gripper_link using only end-effector(gripper) pose.
 
-The code of all my Kinematics can be found in the follwoing file `/kuka_arm/scripts/Kinematics.py`
+The code of all my Kinematics can be found in the following file `/kuka_arm/scripts/Kinematics.py`
 
 Using the data and formulas described in question 1 you can derive the following table: <br>
 
@@ -155,46 +155,15 @@ Then perform a roation in the opposite direction of the gropper link to find the
 the wrist center is is calcualted using the following formula: <br>
 ![Gripper rotation eq][image7]
 
-The gripper link offset d7 = 0.303m the code below shows how to calculate the wrist center: 
-``` python
-  def calculate_wrist_center(self, roll, pitch, yaw, px, py, pz):
-        # Composition of Homogeneous Transforms
-        """T0_2 = simplify(T0_1 * T1_2)
-        T0_3 = simplify(T0_2 * T2_3)
-        T0_4 = simplify(T0_3 * T3_4)
-        T0_5 = simplify(T0_4 * T4_5)
-        T0_6 = simplify(T0_6 * T5_6)
-        T0_G = simplify(T0_G * T6_G)"""
+The gripper link offset d7 = 0.303m the code below shows how to calculate the wrist center you can look at the `/kuka_arm/scripts/Kinematics.py` file and look the 
+``` python  def calculate_wrist_center(self, roll, pitch, yaw, px, py, pz): ``` method 
 
-        # Correction Needed to Account of Orientation Difference Between Definiton Of
-        # Gripper_Link in URDF versus DH Convention
-        r, p ,y = symbols(' r p y')
+Once the wrist center is calculated we can then calcualte the first joint using a simple arch tan function e.g. <br>
+![archtan eq][image8]
+![archtan eq][image9]
 
-        R_x = Matrix([[ 1, 0, 0],
-                     [0, cos(r), -sin(r)],
-                     [0, sin(r), cos(r)]]) #Roll
-        R_y = Matrix([[cos(p), 0, sin(p)],
-                     [0, 1, 0],
-                     [-sin(p), 0, cos(p)]]) # Pitch
-        R_z = Matrix([[cos(y), -sin(y), 0],
-                     [sin(y), cos(y), 0],
-                     [0, 0, 1]]) # Yaw
-
-        R_ee = R_z * R_y * R_x 
-        R_error = R_z.subs(y, radians(180)) * R_y.subs(p, radians(-90))
-        R_ee = R_ee * R_error
-        R_ee = R_ee.subs({'r': roll, 'p': pitch, 'y': yaw})
-
-        EE = Matrix([[px],
-                     [py],
-                     [pz]])
-
-        WC = EE - (0.303) * R_ee[:,2]
-	
-  	       
-	return R_ee, WC
-```
-
+To calculate joints 2 and 3 just use the law of cosines as defined in the picture below:
+![law of cosines][image10]
 
 ### Project Implementation
 
