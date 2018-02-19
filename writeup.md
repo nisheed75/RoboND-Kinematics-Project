@@ -68,17 +68,17 @@ The Kuka KR 210 arm has the following specification, I've drawn a schematic with
 ![Schematic Kuka_KR210][image1]
 
 Looking at the definiton in the  URDF file `kr210.urdf.xacro`  you can extract the parameters for the joint, links and gripper: <br>
-O | joint | parent | child | x | y | z | r | p | y |
---- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-0 | fixed_base | base_footprint | base_link | 0 | 0 | 0 | 0 | 0 | 0 |
-1 | joint_1 | base_link | link_1 | 0 | 0 | 0.33 | 0 | 0 | 0 |
-2 | joint_2 | link_1 | link_2 | 0 .35| 0 | 0.42 | 0 | 0 | 0 |
-3 | joint_3 | link_2 | link_3 | 0 | 0 | 1.25 | 0 | 0 | 0 |
-4 | joint_4 | link_3 | link_4 | 0.96 | 0 | -0.054 | 0 | 0 | 0 |
-5 | joint_5 | link_4 | link_5 | 0.54 | 0 | 0 | 0 | 0 | 0 |
-6 | joint_6 | link_5 | link_6 | 0.193 | 0 | 0 | 0 | 0 | 0 |
-7 | gripper | link_6 | gripper_link | 0.11 | 0 | 0 | 0 | 0 | 0 |
-. | **Total (m)** |  |  | **2.153** | 0 | **1.946** | 0 | 0 | 0 |
+| O | joint | parent | child | x | y | z | r | p | y |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|0 | fixed_base | base_footprint | base_link | 0 | 0 | 0 | 0 | 0 | 0 |
+|1 | joint_1 | base_link | link_1 | 0 | 0 | 0.33 | 0 | 0 | 0 |
+|2 | joint_2 | link_1 | link_2 | 0 .35| 0 | 0.42 | 0 | 0 | 0 |
+|3 | joint_3 | link_2 | link_3 | 0 | 0 | 1.25 | 0 | 0 | 0 |
+|4 | joint_4 | link_3 | link_4 | 0.96 | 0 | -0.054 | 0 | 0 | 0 |
+|5 | joint_5 | link_4 | link_5 | 0.54 | 0 | 0 | 0 | 0 | 0 |
+|6 | joint_6 | link_5 | link_6 | 0.193 | 0 | 0 | 0 | 0 | 0 |
+|7 | gripper | link_6 | gripper_link | 0.11 | 0 | 0 | 0 | 0 | 0 |
+|. | **Total (m)** |  |  | **2.153** | 0 | **1.946** | 0 | 0 | 0 |
 
 To simplify the tanslation i combine the last three joints (4,5, and 6) in in joint_5 since their axes in actual KR210 robot intersect at a single point which represent the center of the robot spherical wrist, it will look like the diagram below:
 ![Schematic Kuka_KR210 - Simple][image2]
