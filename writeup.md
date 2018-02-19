@@ -7,6 +7,9 @@ Nisheed Rama
 
 [image1]: https://github.com/nisheed75/RoboND-Kinematics-Project/blob/master/images/Kuka_KR210.jpg
 [image2]: https://github.com/nisheed75/RoboND-Kinematics-Project/blob/master/images/KR210-simple.jpg
+[image3]: https://github.com/nisheed75/RoboND-Kinematics-Project/blob/master/misc_images/eq2.png
+[image4]: https://github.com/nisheed75/RoboND-Kinematics-Project/blob/master/misc_images/eq1.png
+
 
 ### Environment Setup
 
@@ -100,15 +103,23 @@ To simplify the translation I combine the last three joints (4, 5, and 6) at joi
 
 #### 2. Using the DH parameter table you derived earlier, create individual transformation matrices about each joint. In addition, also generate a generalized homogeneous transform between base_link and gripper_link using only end-effector(gripper) pose.
 
-Links | i | alpha(i-1) | a(i-1) | d(i) | theta(i) |
-:---: | :---: | :---: | :---: | :---: | :---: |
-0->1 | 1 | 0 | 0 | 0.75 | q1 |
-1->2 | 2 | -90 | 0.35 | 0 | -90+q2 |
-2->3 | 3 | 0 |  | 1.25 | q3 |
-3->4 | 4 | -90 | -0.05 | 1.5 | q4 |
-4->5 | 5 | 90 | 0 | 0 | q5 |
-5->6 | 6 | -90 | 0 | 0 | q6 |
-6->7 | 7 | 0 | 0 | 0.303 | q7 |
+The code of all my Kinematics can be found in the follwoing file `/kuka_arm/scripts/Kinematics.py`
+
+Using the data and formulas described in question 1 you can derive the following table: <br>
+
+|Links | i | alpha(i-1) | a(i-1) | d(i) | theta(i) |
+|:---: | :---: | :---: | :---: | :---: | :---: |
+|0->1 | 1 | 0 | 0 | 0.75 | q1 |
+|1->2 | 2 | -90 | 0.35 | 0 | -90+q2 |
+|2->3 | 3 | 0 |  | 1.25 | q3 |
+|3->4 | 4 | -90 | -0.05 | 1.5 | q4 |
+|4->5 | 5 | 90 | 0 | 0 | q5 |
+|5->6 | 6 | -90 | 0 | 0 | q6 |
+|6->7 | 7 | 0 | 0 | 0.303 | q7 |
+
+To define the transformation matrix we can create the individual transforms between links, the DH convention uses four individual transforms define by the formulas below: 
+![equation 1][image3]
+![equation 2][image4]
 
 
 #### 3. Decouple Inverse Kinematics problem into Inverse Position Kinematics and inverse Orientation Kinematics; doing so derive the equations to calculate all individual joint angles.
