@@ -121,7 +121,7 @@ To define the transformation matrix we can create the individual transforms betw
 ![equation 1][image3]
 ![equation 2][image4]
 
-Once you have the table above and the transfomation mateix above you can define the individual transformation bwtween link by substiting the variable in the matix with the values for each row in the table: e.g. the transformation from 6->7 will use the follwoing values amd substitutre this in the transformation matix. here is a code exmple of the individual transformation matices:
+Once you have the table above and the transformation matrix above you can define the individual transformation between link by substituting the variable in the matrix with the values for each row in the table: e.g. the transformation from 6->7 will use the following values and substitute this in the transformation matrix. here is a code example of the individual transformation matrices:
 ``` python
         T0_1 = self.transformation_matrix(q1, d1, a0, alpha0).subs(dh_table)
         T1_2 = self.transformation_matrix(q2, d2, a1, alpha1).subs(dh_table)
