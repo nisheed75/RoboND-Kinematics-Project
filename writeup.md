@@ -201,5 +201,6 @@ What an amazing thing to see it pick up the object and place it in the bin. In m
 ##### Areas of Improvement
 1. My arm arrive at the correct point everytime but the route it takes to get there is sometimes really odd and hence it can take longer than expected to get into positon
 1. This also causes the arm to knock over objects 
-1. I need to investigate this as I really don't understand why this is happening. 
+1. I need to investigate this as I really don't understand why this is happening.
+1. The code also runs really slowly but when i run the IK_debug my code runs pretty fast. So i'm not sure if this is an issue with the VM. However i can improve the perfomace using numpy but i need to be careful as i should palce care to ensure i still have good accuracy.  
 
