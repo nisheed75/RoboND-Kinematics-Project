@@ -84,6 +84,20 @@ Looking at the definiton in the  URDF file `kr210.urdf.xacro`  you can extract t
 To simplify the translation I combine the last three joints (4, 5, and 6) at joint_5 since their axes intersect at a single point which represent the center of the robot spherical wrist, it will look like the diagram below:
 ![Schematic Kuka_KR210 - Simple][image2]
  
+ #### Note that:
+
+**Origin** O(i) = intersection between Xi and Zi axis
+
+**Link Length:** a(i-1) = Zi-1 - Zi measured about the X(i-1) axis
+
+**Link Offset:** d(i) = X(i-1) - X(i) measured about Z(i) axis
+
+**Link Twist:** alpha(i-1) = angle from Z(i-1) to Z(i) measured about Xi-1 using right hand rule
+
+**Joint Angle:** theta(i) = angle from X(i-1) to X(i) measured about Zi using right hand rule. all joint angles will be zero at initial Robot state in KR210 except joint 2 which has a -90 degree constant offset between X(1) and X(2).
+
+**Gripper frame:** is the end point is the focal point for the Kinematic. It is displaced from Frame 6 by a translation along Z(6).
+
 #### 2. Using the DH parameter table you derived earlier, create individual transformation matrices about each joint. In addition, also generate a generalized homogeneous transform between base_link and gripper_link using only end-effector(gripper) pose.
 
 Links | i | alpha(i-1) | a(i-1) | d(i) | theta(i) |
