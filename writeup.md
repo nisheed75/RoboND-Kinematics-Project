@@ -9,7 +9,12 @@ Nisheed Rama
 [image2]: https://github.com/nisheed75/RoboND-Kinematics-Project/blob/master/images/KR210-simple.jpg
 [image3]: https://github.com/nisheed75/RoboND-Kinematics-Project/blob/master/misc_images/eq2.png
 [image4]: https://github.com/nisheed75/RoboND-Kinematics-Project/blob/master/misc_images/eq1.png
-
+[image5]: https://github.com/nisheed75/RoboND-Kinematics-Project/blob/master/misc_images/urdf_coord.png
+[image6]: https://github.com/nisheed75/RoboND-Kinematics-Project/blob/master/misc_images/gripper_frame.png
+[image7]: https://github.com/nisheed75/RoboND-Kinematics-Project/blob/master/misc_images/eq_inv_kine.png
+[image8]: https://github.com/nisheed75/RoboND-Kinematics-Project/blob/master/misc_images/arc_tan.png
+[image9]: https://github.com/nisheed75/RoboND-Kinematics-Project/blob/master/misc_images/arch_tan.gif
+[image10]: https://github.com/nisheed75/RoboND-Kinematics-Project/blob/master/misc_images/law_of_cos.png
 
 ### Environment Setup
 
@@ -133,9 +138,63 @@ Once you have the table above and the transformation matrix above you can define
 ```
 #### 3. Decouple Inverse Kinematics problem into Inverse Position Kinematics and inverse Orientation Kinematics; doing so derive the equations to calculate all individual joint angles.
 
-And here's where you can draw out and show your math for the derivation of your theta angles. 
+The inverse kinematics problem was resolved analytically by dividing the problem in two parts: <br>
+1. Find the first 3 joint angles (counting from the base) from the pose position and 
+1. Find the remaining 3 wrist joint angles from the pose orientation.
 
-![alt text][image2]
+##### Inverse Position Kinematics
+Find the poisiton of the wrist given the end-effector coordinate <br>
+![Gripper Ref Frame 1][image5]
+
+To resove this you need to crearte a correction roation that is composed of a roation on the z axis by 180 degrees followed by a rotation on the Y axis by -90 degrees.
+
+Then perform a roation in the opposite direction of the gropper link to find the wrist center.
+![Gripper Ref Frame 2][image6]
+<br>
+
+the wrist center is is calcualted using the following formula: <br>
+![Gripper rotation eq][image7]
+
+The gripper link offset d7 = 0.303m the code below shows how to calculate the wrist center: 
+``` python
+  def calculate_wrist_center(self, roll, pitch, yaw, px, py, pz):
+        # Composition of Homogeneous Transforms
+        """T0_2 = simplify(T0_1 * T1_2)
+        T0_3 = simplify(T0_2 * T2_3)
+        T0_4 = simplify(T0_3 * T3_4)
+        T0_5 = simplify(T0_4 * T4_5)
+        T0_6 = simplify(T0_6 * T5_6)
+        T0_G = simplify(T0_G * T6_G)"""
+
+        # Correction Needed to Account of Orientation Difference Between Definiton Of
+        # Gripper_Link in URDF versus DH Convention
+        r, p ,y = symbols(' r p y')
+
+        R_x = Matrix([[ 1, 0, 0],
+                     [0, cos(r), -sin(r)],
+                     [0, sin(r), cos(r)]]) #Roll
+        R_y = Matrix([[cos(p), 0, sin(p)],
+                     [0, 1, 0],
+                     [-sin(p), 0, cos(p)]]) # Pitch
+        R_z = Matrix([[cos(y), -sin(y), 0],
+                     [sin(y), cos(y), 0],
+                     [0, 0, 1]]) # Yaw
+
+        R_ee = R_z * R_y * R_x 
+        R_error = R_z.subs(y, radians(180)) * R_y.subs(p, radians(-90))
+        R_ee = R_ee * R_error
+        R_ee = R_ee.subs({'r': roll, 'p': pitch, 'y': yaw})
+
+        EE = Matrix([[px],
+                     [py],
+                     [pz]])
+
+        WC = EE - (0.303) * R_ee[:,2]
+	
+  	       
+	return R_ee, WC
+```
+
 
 ### Project Implementation
 
