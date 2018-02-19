@@ -68,8 +68,9 @@ The Kuka KR 210 arm has the following specification, I've drawn a schematic with
 ![Schematic Kuka_KR210][image1]
 
 Looking at the definiton in the  URDF file `kr210.urdf.xacro`  you can extract the parameters for the joint, links and gripper: <br>
+
 | O | joint | parent | child | x | y | z | r | p | y |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|---|---|---|---|---|---|---|---|---|---|
 |0 | fixed_base | base_footprint | base_link | 0 | 0 | 0 | 0 | 0 | 0 |
 |1 | joint_1 | base_link | link_1 | 0 | 0 | 0.33 | 0 | 0 | 0 |
 |2 | joint_2 | link_1 | link_2 | 0 .35| 0 | 0.42 | 0 | 0 | 0 |
@@ -80,7 +81,7 @@ Looking at the definiton in the  URDF file `kr210.urdf.xacro`  you can extract t
 |7 | gripper | link_6 | gripper_link | 0.11 | 0 | 0 | 0 | 0 | 0 |
 |. | **Total (m)** |  |  | **2.153** | 0 | **1.946** | 0 | 0 | 0 |
 
-To simplify the tanslation i combine the last three joints (4,5, and 6) in in joint_5 since their axes in actual KR210 robot intersect at a single point which represent the center of the robot spherical wrist, it will look like the diagram below:
+To simplify the translation I combine the last three joints (4, 5, and 6) at joint_5 since their axes intersect at a single point which represent the center of the robot spherical wrist, it will look like the diagram below:
 ![Schematic Kuka_KR210 - Simple][image2]
  
 #### 2. Using the DH parameter table you derived earlier, create individual transformation matrices about each joint. In addition, also generate a generalized homogeneous transform between base_link and gripper_link using only end-effector(gripper) pose.
