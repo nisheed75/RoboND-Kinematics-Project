@@ -1,18 +1,111 @@
-## Project: Kinematics Pick & Place
-### Writeup Template: You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
+## Project: Kinematics Pick & Place (Kuka KR210)
 
+Nisheed Rama
+18 Feb 2018
 ---
 
+### Environment Setup
 
-**Steps to complete the project:**  
+#### Prerequisites
+##### Current Udacity Student
+To setup you VM [click here](https://classroom.udacity.com/nanodegrees/nd209/parts/c199593e-1e9a-4830-8e29-2c86f70f489e/modules/2919466f-aa2b-4424-b86a-98b0a53ce335/lessons/2cd33882-d29e-43e8-9ff7-10398c8b5351/concepts/undefined)
+
+##### Others
+You'll need to setup an environemnt with the following:
+1. Ubuntu 16.04 LTS OS (https://www.ubuntu.com/download/desktop?cp=close)
+1. ROS Kinetic 1.12.12 (http://wiki.ros.org/kinetic/Installation)
+1. Gazebo 7.9 (http://gazebosim.org/download)
+1. RVIZ version 1.12.15 (Qt version 5.5.1 & OGRE version 1.9.0) (http://wiki.ros.org/rviz)
 
 
-1. Set up your ROS Workspace.
-2. Download or clone the [project repository](https://github.com/udacity/RoboND-Kinematics-Project) into the ***src*** directory of your ROS Workspace.  
-3. Experiment with the forward_kinematics environment and get familiar with the robot.
-4. Launch in [demo mode](https://classroom.udacity.com/nanodegrees/nd209/parts/7b2fd2d7-e181-401e-977a-6158c77bf816/modules/8855de3f-2897-46c3-a805-628b5ecf045b/lessons/91d017b1-4493-4522-ad52-04a74a01094c/concepts/ae64bb91-e8c4-44c9-adbe-798e8f688193).
-5. Perform Kinematic Analysis for the robot following the [project rubric](https://review.udacity.com/#!/rubrics/972/view).
-6. Fill in the `IK_server.py` with your Inverse Kinematics code. 
+###### Set up your ROS Workspace.
+1. Download or clone the [project repository](https://github.com/nisheed75/RoboND-Kinematics-Project.git) into the ***src*** directory of your ROS Workspace. 
+```sh
+  cd ~/catkin_ws/src
+  git clone https://github.com/nisheed75/RoboND-Kinematics-Project.git 
+```
+1. As this project uses custom Gazebo 3D models, we need to add the path through environment variable: 
+```sh* As this project uses custom Gazebo 3D models, we need to add the path through environment variable: 
+```sh
+$ echo "export GAZEBO_MODEL_PATH=~/catkin_ws/src/kuka_arm/models" >> ~/.bashrc
+```
+1. Install missing ROS dependencies using the `rosdep` install command:
+```sh
+$ cd ~/catkin_ws/
+$ rosdep install --from-paths src --ignore-src --rosdistro=kinetic -y
+```
+1. Run catkin_make from within your workspace to build the project:
+```sh
+$ cd ~/catkin_ws/
+$ catkin_make
+```
+1. Run the following shell commands to source the setup files:
+```sh
+$ echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc
+```
+1. Run the following shell commands to source the setup files:
+```sh
+$ echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc
+```
+
+1. For demo mode make sure the demo flag is set to `true` in `inverse_kinematics.launch` file under `~/catkin_ws/src/kuka_arm/launch/`
+
+
+1. You can also control the spawn location of the target object in the shelf by modifying the spawn_location argument in `target_description.launch` file under `~/catkin_ws/src/kuka_arm/launch/`. 0-9 are valid values for spawn_location with 0 being random mode.
+
+1. To run forward kinematics test us:
+```sh
+$ roslaunch kuka_arm forward_kinematics.launch
+```
+
+1. To run simulator use:
+```sh
+$ rosrun kuka_arm safe_spawner.sh
+```
+
+1. To run IK Server use:
+```sh
+$ rosrun kuka_arm IK_server.py 
+```
+$ echo "export GAZEBO_MODEL_PATH=~/catkin_ws/src/kuka_arm/models" >> ~/.bashrc
+```
+
+1. Install missing ROS dependencies using the `rosdep` install command:
+```sh
+$ cd ~/catkin_ws/
+$ rosdep install --from-paths src --ignore-src --rosdistro=kinetic -y
+```
+
+1. Run catkin_make from within your workspace to build the project:
+```sh
+$ cd ~/catkin_ws/
+$ catkin_make
+```
+
+1. Run the following shell commands to source the setup files:
+```sh
+$ echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc
+```
+
+1. For demo mode make sure the demo flag is set to `true` in `inverse_kinematics.launch` file under `~/catkin_ws/src/kuka_arm/launch/`
+
+
+1. You can also control the spawn location of the target object in the shelf by modifying the spawn_location argument in `target_description.launch` file under `~/catkin_ws/src/kuka_arm/launch/`. 0-9 are valid values for spawn_location with 0 being random mode.
+
+1. To run forward kinematics test us:
+```sh
+$ roslaunch kuka_arm forward_kinematics.launch
+```
+
+1. To run simulator use:
+```sh
+$ rosrun kuka_arm safe_spawner.sh
+```
+
+1. To run IK Server use:
+```sh
+$ rosrun kuka_arm IK_server.py 
+```
 
 
 [//]: # (Image References)
