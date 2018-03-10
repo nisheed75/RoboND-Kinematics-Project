@@ -247,6 +247,56 @@ To calculate the rotation matrix from 0 to 3 the operation is defined by the fol
 Inverting a matrix is complex and can be numerically unstable. To avoid this issue we use the principle that rotation matrices are orthogonal and the transpose is equal to it inverse.
 ![archtan eq][image12]
 
+##### Here is the code that shows how each angle is calculated
+Theta 1 `theta1`
+```
+theta1 = atan2(WC[1], WC[0])
+```
+Find the 3rd sides of the triangle
+```
+A = 1.501        
+B = sqrt(pow((sqrt(WC[0]*WC[0] + WC[1]*WC[1]) - 0.35), 2) + pow((WC[2] - 0.75), 2))
+C = 1.25
+````
+Cosine Laws SSS to find all inner angles of the triangle
+```
+a = acos((B * B + C * C - A * A) / (2 * B * C))
+b = acos((A * A + C * C - B * B) / (2 * A * C))
+c = acos((A * A + B * B - C * C) / (2 * A * B))
+```
+Find `theta2` and `theta3`
+```
+theta2 = pi/2 - a - atan2(WC[2]-0.75, sqrt(WC[0]*WC[0]+WC[1]*WC[1])-0.35)
+theta3 = pi/2 - (b+0.036) # 0.036 accounts for sag in link4 of -0.054m
+```
+Extract rotation matrices from the transformation matrices also
+extract rotation matrix R0_3 from transformation matrix T0_3 then substitute angles q1-3
+```
+R0_3 = T0_1[0:3,0:3] * T1_2[0:3,0:3] * T2_3[0:3,0:3]
+R0_3 = R0_3.evalf(subs={q1: theta1, q2: theta2, q3:theta3})
+```                       
+Get rotation matrix R3_6 from (transpose of R0_3 * R_EE)
+```
+R3_6 = R0_3.transpose() * R_ee
+```
+Euler angles from rotation matrix
+<br>
+Theta 5 `theta5`
+```
+theta5 = atan2(sqrt(R3_6[0,2]*R3_6[0,2] + R3_6[2,2]*R3_6[2,2]),R3_6[1,2])
+```            
+Select best solution based on theta5
+<br>
+Theta `theta4` & `theta6`
+ ```
+if (theta5 > pi) :
+    theta4 = atan2(-R3_6[2,2], R3_6[0,2])
+    theta6 = atan2(R3_6[1,1],-R3_6[1,0])
+else:
+    theta4 = atan2(R3_6[2,2], -R3_6[0,2])
+    theta6 = atan2(-R3_6[1,1],R3_6[1,0])
+```
+
 
 ### Project Implementation
 
