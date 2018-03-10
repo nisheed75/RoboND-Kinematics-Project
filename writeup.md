@@ -17,6 +17,8 @@ Nisheed Rama
 [image10]: /misc_images/law_of_cos.png
 [image11]: /misc_images/inv_orin_kine1.png
 [image12]: /misc_images/inv_orin_kine2.png
+[image13]: /images/9_1_on_floor.jpg
+[image14]: /images/9_10.jpg
 
 ### Environment Setup
 
@@ -321,6 +323,11 @@ All my Kinematics code is in the following file `/kuka_arm/scripts/Kinematics.py
 ##### Result Discussion 
 What an amazing thing to see it pick up the object and place it in the bin. In my two runs of the code, i was able to successfully pickup 8/10 objects. 
 
+###### Here are picture where i have a run with 9 out of 10 in the bin
+
+![9 out of 10 with one on the floor ][image14]
+<br>
+![9 out of 10 in bin][image13] 
 ##### Areas of Improvement
 1. My arm arrive at the correct point everytime but the route it takes to get there is sometimes really odd and hence it can take longer than expected to get into positon
 1. This also causes the arm to knock over objects 
