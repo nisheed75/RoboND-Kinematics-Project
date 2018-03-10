@@ -5,18 +5,18 @@ Nisheed Rama
 ---
 [//]: # (Image References)
 
-[image1]: (https://github.com/nisheed75/RoboND-Kinematics-Project/blob/master/images/Kuka_KR210.jpg)
-[image2]: (https://github.com/nisheed75/RoboND-Kinematics-Project/blob/master/images/KR210-simple.jpg)
-[image3]: (https://github.com/nisheed75/RoboND-Kinematics-Project/blob/master/misc_images/eq2.png)
-[image4]: (https://github.com/nisheed75/RoboND-Kinematics-Project/blob/master/misc_images/eq1.png)
-[image5]: (https://github.com/nisheed75/RoboND-Kinematics-Project/blob/master/misc_images/urdf_coord.png)
-[image6]: (https://github.com/nisheed75/RoboND-Kinematics-Project/blob/master/misc_images/gripper_frame.png)
-[image7]: (https://github.com/nisheed75/RoboND-Kinematics-Project/blob/master/misc_images/eq_inv_kine.png)
-[image8]: (https://github.com/nisheed75/RoboND-Kinematics-Project/blob/master/misc_images/arc_tan.png)
-[image9]: (https://github.com/nisheed75/RoboND-Kinematics-Project/blob/master/misc_images/arch_tan.gif)
-[image10]: (https://github.com/nisheed75/RoboND-Kinematics-Project/blob/master/misc_images/law_of_cos.png)
-[image11]: (https://github.com/nisheed75/RoboND-Kinematics-Project/blob/master/misc_images/inv_orin_kine1.png)
-[image12]: (https://github.com/nisheed75/RoboND-Kinematics-Project/blob/master/misc_images/inv_orin_kine2.png)
+[image1]: /images/Kuka_KR210.jpg
+[image2]: /images/KR210-simple.jpg
+[image3]: /misc_images/eq2.png
+[image4]: /misc_images/eq1.png
+[image5]: /misc_images/urdf_coord.png
+[image6]: /misc_images/gripper_frame.png
+[image7]: /misc_images/eq_inv_kine.png
+[image8]: /misc_images/arc_tan.png
+[image9]: /misc_images/arch_tan.gif
+[image10]: /misc_images/law_of_cos.png
+[image11]: /misc_images/inv_orin_kine1.png
+[image12]: /misc_images/inv_orin_kine2.png
 
 ### Environment Setup
 
