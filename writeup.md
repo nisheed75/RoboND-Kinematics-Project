@@ -19,6 +19,8 @@ Nisheed Rama
 [image12]: /misc_images/inv_orin_kine2.png
 [image13]: /images/9_1_on_floor.jpg
 [image14]: /images/9_10.jpg
+[image15]: /misc_images/homo-xform-2.png
+[image16]: /misc_images/equations.png
 
 ### Environment Setup
 
@@ -215,11 +217,21 @@ If we substitute zero for all thetas, we get a matrix representing the origin po
 
 #### 3. Decouple Inverse Kinematics problem into Inverse Position Kinematics and inverse Orientation Kinematics; doing so derive the equations to calculate all individual joint angles.
 
-The inverse kinematics problem was resolved analytically by dividing the problem into two parts: <br>
-1. Find the first 3 joint angles (counting from the base) from the pose position and 
-1. Find the remaining 3 wrist joint angles from the pose orientation.
+Since the last three joints in the Kuka KR210 are revolute and their joint axes intersecpt at a single point, we have a spherical wrist with joint 5 and this is our common intesection point which we call the wrist center. This allows us to kinematically decouple the IK problem into Inverse Position and Inverse Orientation. 
+
+
+In summary we doing the following:
+1. <b>Inverse Position Kinematics</b> - Find the first 3 joint angles (counting from the base) from the pose position  
+1. <b>Inverse Orientation Kinematics</b> - Find the remaining 3 wrist joint angles from the pose orientation.
 
 ##### Inverse Position Kinematics
+To obtain the position of the wrist center we can use the transaformation matrix we defined above. As it was done on the course explanation I simplfiy the homogenous transform as follows:
+![homogenous transform][image15]
+
+<b>l</b>, <b>m</b>, and <b>n</b> are orthonormal vectors representing the end-factor orientation along  X, Y, Z axes of the local corordinate frame.
+
+Since n is the vector along the z_axis of the gropper_link, we can say the following:
+![equations][image16]
 Find the poisiton of the wrist given the end-effector coordinate <br>
 ![Gripper Ref Frame 1][image5]
 
