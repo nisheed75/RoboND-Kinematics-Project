@@ -225,24 +225,34 @@ In summary we doing the following:
 1. <b>Inverse Orientation Kinematics</b> - Find the remaining 3 wrist joint angles from the pose orientation.
 
 ##### Inverse Position Kinematics
-To obtain the position of the wrist center we can use the transaformation matrix we defined above. As it was done on the course explanation I simplfiy the homogenous transform as follows:
+To obtain the position of the wrist center we can use the transaformation matrix we defined above. As it was done on the course explanation I simplfiy the homogenous transform as follows:<br>
 ![homogenous transform][image15]
 
 <b>l</b>, <b>m</b>, and <b>n</b> are orthonormal vectors representing the end-factor orientation along  X, Y, Z axes of the local corordinate frame.
 
-Since n is the vector along the z_axis of the gropper_link, we can say the following:
-![equations][image16]
+Since n is the vector along the z_axis of the gropper_link, we can say the following:<br>
+![equations][image16] <br> 
+
+Where 
+Px, Py, Pz = end-factore poitions 
+<br>Wx, Wy Wz = writst positions
+<br>d6 = DH Table parameter
+<br>l = end-factor lenght
+<br>
+To caculate <b>nx</b>, <b>ny</b>, <b>nz</b>, we need to correct for the difference between the URDF and the DH reference frames for the end-factor. 
+<br>
+###### Difference Correction:
 Find the poisiton of the wrist given the end-effector coordinate <br>
 ![Gripper Ref Frame 1][image5]
-
+<br>
 To resolve this you need to create a correction rotation that is composed of a rotation on the z-axis by 180 degrees followed by rotation on the Y axis by -90 degrees.
-
+<br>
 Then perform a rotation in the opposite direction of the gripper link to find the wrist center.
 ![Gripper Ref Frame 2][image6]
 <br>
 
 the wrist center is is calcualted using the following formula: <br>
-![Gripper rotation eq][image7]
+
 
 The gripper link offset d7 = 0.303m the code below shows how to calculate the wrist center you can look at the `/kuka_arm/scripts/Kinematics.py` file and look the 
 ``` python  def calculate_wrist_center(self, roll, pitch, yaw, px, py, pz): ``` method 
