@@ -252,7 +252,7 @@ Then perform a rotation in the opposite direction of the gripper link to find th
 <br>
 
 the wrist center is is calcualted using the following formula: <br>
-
+![Gripper rotation eq][image7]
 
 The gripper link offset d7 = 0.303m the code below shows how to calculate the wrist center you can look at the `/kuka_arm/scripts/Kinematics.py` file and look the 
 ``` python  def calculate_wrist_center(self, roll, pitch, yaw, px, py, pz): ``` method 
