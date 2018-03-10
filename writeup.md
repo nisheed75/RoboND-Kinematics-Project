@@ -138,6 +138,79 @@ Once you have the table above and the transformation matrix above you can define
         T5_6 = self.transformation_matrix(q6, d6, a5, alpha5).subs(dh_table)
         T6_G = self.transformation_matrix(q7, d7, a6, alpha6).subs(dh_table)
 ```
+The transformation matrices for each joint are thus:
+
+Joint 1 `T0_1`:
+```
+[[cos(q1), -sin(q1), 0, 0],
+[sin(q1), cos(q1), 0, 0],
+[0, 0, 1, 0.750000000000000],
+[0, 0, 0, 1]]
+```
+Joint 2 `T1_2`:
+```
+[[cos(q2 - 0.5*pi), -sin(q2 - 0.5*pi), 0, 0.350000000000000],
+[0, 0, 1, 0],
+[-sin(q2 - 0.5*pi), -cos(q2 - 0.5*pi), 0, 0],
+[0, 0, 0, 1]]
+```
+Joint 3 `T2_3`:
+```
+[[cos(q3), -sin(q3), 0, 1.25000000000000],
+[sin(q3), cos(q3), 0, 0],
+[0, 0, 1, 0],
+[0, 0, 0, 1]]
+```
+Joint 4 `T3_4`:
+```
+[[cos(q4), -sin(q4), 0, -0.0540000000000000],
+[0, 0, 1, 1.50000000000000],
+[-sin(q4), -cos(q4), 0, 0],
+[0, 0, 0, 1]]
+```
+
+Joint 5 `T4_5`
+```
+[[cos(q5), -sin(q5), 0, 0],
+[0, 0, -1, 0],
+[sin(q5), cos(q5), 0, 0],
+[0, 0, 0, 1]]
+```
+
+Joint 6 `T5_6`
+```
+[[cos(q6), -sin(q6), 0, 0],
+[0, 0, 1, 0],
+[-sin(q6), -cos(q6), 0, 0],
+[0, 0, 0, 1]]
+```
+Joint 7 (Gripper) `T6_G`
+```
+[[1, 0, 0, a6],
+[0, 1, 0, 0],
+[0, 0, 1, 0.303000000000000],
+[0, 0, 0, 1]]
+```
+The full transformation for the arm is thus:
+
+```
+T0_EE = simplify(T0_1 * T1_2 * T2_3 * T3_4 * T4_5 * T5_6 * T6_EE)
+```
+Which results in the matrix:
+
+```
+[[((sin(q1)*sin(q4) + sin(q2 + q3)*cos(q1)*cos(q4))*cos(q5) + sin(q5)*cos(q1)*cos(q2 + q3))*cos(q6) + (sin(q1)*cos(q4) - sin(q4)*sin(q2 + q3)*cos(q1))*sin(q6), -((sin(q1)*sin(q4) + sin(q2 + q3)*cos(q1)*cos(q4))*cos(q5) + sin(q5)*cos(q1)*cos(q2 + q3))*sin(q6) + (sin(q1)*cos(q4) - sin(q4)*sin(q2 + q3)*cos(q1))*cos(q6), -(sin(q1)*sin(q4) + sin(q2 + q3)*cos(q1)*cos(q4))*sin(q5) + cos(q1)*cos(q5)*cos(q2 + q3), 1.0*a6*sin(q1)*sin(q4)*cos(q5)*cos(q6) + 1.0*a6*sin(q1)*sin(q6)*cos(q4) - 1.0*a6*sin(q4)*sin(q6)*sin(q2 + q3)*cos(q1) + 1.0*a6*sin(q5)*cos(q1)*cos(q6)*cos(q2 + q3) + 1.0*a6*sin(q2 + q3)*cos(q1)*cos(q4)*cos(q5)*cos(q6) - 0.303*sin(q1)*sin(q4)*sin(q5) + 1.25*sin(q2)*cos(q1) - 0.303*sin(q5)*sin(q2 + q3)*cos(q1)*cos(q4) - 0.054*sin(q2 + q3)*cos(q1) + 0.303*cos(q1)*cos(q5)*cos(q2 + q3) + 1.5*cos(q1)*cos(q2 + q3) + 0.35*cos(q1)], [((sin(q1)*sin(q2 + q3)*cos(q4) - sin(q4)*cos(q1))*cos(q5) + sin(q1)*sin(q5)*cos(q2 + q3))*cos(q6) - (sin(q1)*sin(q4)*sin(q2 + q3) + cos(q1)*cos(q4))*sin(q6), ((-sin(q1)*sin(q2 + q3)*cos(q4) + sin(q4)*cos(q1))*cos(q5) - sin(q1)*sin(q5)*cos(q2 + q3))*sin(q6) - (sin(q1)*sin(q4)*sin(q2 + q3) + cos(q1)*cos(q4))*cos(q6), (-sin(q1)*sin(q2 + q3)*cos(q4) + sin(q4)*cos(q1))*sin(q5) + sin(q1)*cos(q5)*cos(q2 + q3), -1.0*a6*sin(q1)*sin(q4)*sin(q6)*sin(q2 + q3) + 1.0*a6*sin(q1)*sin(q5)*cos(q6)*cos(q2 + q3) + 1.0*a6*sin(q1)*sin(q2 + q3)*cos(q4)*cos(q5)*cos(q6) - 1.0*a6*sin(q4)*cos(q1)*cos(q5)*cos(q6) - 1.0*a6*sin(q6)*cos(q1)*cos(q4) + 1.25*sin(q1)*sin(q2) - 0.303*sin(q1)*sin(q5)*sin(q2 + q3)*cos(q4) - 0.054*sin(q1)*sin(q2 + q3) + 0.303*sin(q1)*cos(q5)*cos(q2 + q3) + 1.5*sin(q1)*cos(q2 + q3) + 0.35*sin(q1) + 0.303*sin(q4)*sin(q5)*cos(q1)], [(-sin(q5)*sin(q2 + q3) + cos(q4)*cos(q5)*cos(q2 + q3))*cos(q6) - sin(q4)*sin(q6)*cos(q2 + q3), (sin(q5)*sin(q2 + q3) - cos(q4)*cos(q5)*cos(q2 + q3))*sin(q6) - sin(q4)*cos(q6)*cos(q2 + q3), -sin(q5)*cos(q4)*cos(q2 + q3) - sin(q2 + q3)*cos(q5), -1.0*a6*sin(q4)*sin(q6)*cos(q2 + q3) - 1.0*a6*sin(q5)*sin(q2 + q3)*cos(q6) + 1.0*a6*cos(q4)*cos(q5)*cos(q6)*cos(q2 + q3) - 0.303*sin(q5)*cos(q4)*cos(q2 + q3) - 0.303*sin(q2 + q3)*cos(q5) - 1.5*sin(q2 + q3) + 1.25*cos(q2) - 0.054*cos(q2 + q3) + 0.75], [0, 0, 0, 1]]
+```
+
+If we substitute zero for all thetas, we get a matrix representing the origin position of the Kuka Arm:
+
+```
+[[0, 0, 1, 2.15300000000000],
+[0, -1, 0, 0],
+[1, 0, 0, 1.94600000000000],
+[0, 0, 0, 1]]
+```
+
 #### 3. Decouple Inverse Kinematics problem into Inverse Position Kinematics and inverse Orientation Kinematics; doing so derive the equations to calculate all individual joint angles.
 
 The inverse kinematics problem was resolved analytically by dividing the problem into two parts: <br>
