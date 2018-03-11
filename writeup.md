@@ -22,6 +22,8 @@ Nisheed Rama
 [image15]: /misc_images/homo-xform-2.png
 [image16]: /misc_images/equations.png
 [image17]: /misc_images/l21-l-inverse-kinematics-new-design-fixed.png
+[image18]: /misc_images/3side_eq.png
+[image19]: /misc_images/law_of_cos.png
 ### Environment Setup
 
 #### Prerequisites
@@ -278,10 +280,11 @@ Once the wrist center is calculated we can then calcualte the first joint using 
 To calculate joints 2 and 3 we use trignometry specifically the Cosine Laws as follows:
 
 We know the lenght of A and C. So we can just use the followwing math to calculate B <br>
-```
+![3 side equation][image18]
 
-```
-
+Once we have all the sides of the triangle we can use law of cosines as follow to calculate theta 2 and 3 <br>
+![law of cosines][image19]
+<br>
 ##### Inverse Orientation Kinematics
 To calculate the rotation matrix from 0 to 3 the operation is defined by the following equation: <br>
 ![archtan eq][image11]
