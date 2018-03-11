@@ -21,7 +21,7 @@ Nisheed Rama
 [image14]: /images/9_10.jpg
 [image15]: /misc_images/homo-xform-2.png
 [image16]: /misc_images/equations.png
-
+[image17]: /misc_images/l21-l-inverse-kinematics-new-design-fixed.png
 ### Environment Setup
 
 #### Prerequisites
@@ -230,39 +230,57 @@ To obtain the position of the wrist center we can use the transaformation matrix
 
 <b>l</b>, <b>m</b>, and <b>n</b> are orthonormal vectors representing the end-factor orientation along  X, Y, Z axes of the local corordinate frame.
 
-Since n is the vector along the z_axis of the gropper_link, we can say the following:<br>
+Since n is the vector along the z_axis of the gripper_link, we can say the following:<br>
 ![equations][image16] <br> 
 
 Where 
-Px, Py, Pz = end-factore poitions 
+Px, Py, Pz = end-factor poitions 
 <br>Wx, Wy Wz = writst positions
 <br>d6 = DH Table parameter
 <br>l = end-factor lenght
 <br>
-To caculate <b>nx</b>, <b>ny</b>, <b>nz</b>, we need to correct for the difference between the URDF and the DH reference frames for the end-factor. 
+To calculate <b>nx</b>, <b>ny</b>, <b>nz</b>, we need to correct for the difference between the URDF and the DH reference frames for the end-factor. 
 <br>
-###### Difference Correction:
-Find the poisiton of the wrist given the end-effector coordinate <br>
+###### Correction Rotation Matrix
+Since the orientation of the gripper is differnent in the URDF and DH Parameters defnitions we need to perfrom a correction so that we can compare the homogeneous ransform between the base link and the gripper link. <br>
+This problem us visually shown here: <br>
 ![Gripper Ref Frame 1][image5]
 <br>
-To resolve this you need to create a correction rotation that is composed of a rotation on the z-axis by 180 degrees followed by rotation on the Y axis by -90 degrees.
+To resolve this you need to create a correction rotation matrix that is composed of a rotation on the z-axis by 180 degrees followed by rotation on the Y axis by -90 degrees.
 <br>
-Then perform a rotation in the opposite direction of the gripper link to find the wrist center.
-![Gripper Ref Frame 2][image6]
-<br>
+Once the correctional ratation matirx is defined, next calcualted the end-factor pose with respect the the <code>base link</code>. There are various considerations and conventions that need to be looked at regarding Euler angles, and how to shoose the correct conventions. I'll do a dis services to that mateial if i try to explain it all but i will attempt to provide the sailent points in side note below. 
 
-the wrist center is is calcualted using the following formula: <br>
+###### Side Note: Compositions of Rotations
+
+<br>
+One such convention is the x-y-z extrinsic rotations. Taking this convension our roation matrix will be as follows
+```
+Rrpy = Rot(Z, yaw) * Rot(Y, pitch) * Rot(X, roll) * R_corr
+```
+<br> where R_corr is the Correction Rotation Matrix
+
+Since we need roll, pitch and yaw we need to use the ``` transformations.py ``` module from the TF package to get these values since ROS returns then in quaternions. <br>
+
+We then extract <b>nx</b>, <b>ny</b>, <b>nz</b> values from this Rrpy matrix to obtain the wrist cneter position. Once we have the wrist center poisiton. <br>
 ![Gripper rotation eq][image7]
 
-The gripper link offset d7 = 0.303m the code below shows how to calculate the wrist center you can look at the `/kuka_arm/scripts/Kinematics.py` file and look the 
-``` python  def calculate_wrist_center(self, roll, pitch, yaw, px, py, pz): ``` method 
+We can calculate theta 1, 2 & 3 the math below maths. The picture below presents a visual representation of the the problem.<br>
+![joint2,3,WC][image17]
+<br>
+Where labels 2, 3 and WC are Joint 2, Joint 3, and the Wrist Center, respectively. 
+
+By projecting the joints onto the z-y plane corresponding to the world reference frame, you can visualize a triangle between the three. From your DH parameters, you can calculate the distance between each joint above.
+<br>
 
 Once the wrist center is calculated we can then calcualte the first joint using a simple arch tan function e.g. <br>
-![archtan eq][image8]
 ![archtan eq][image9]
 
-To calculate joints 2 and 3 just use the law of cosines as defined in the picture below:
-![law of cosines][image10]
+To calculate joints 2 and 3 we use trignometry specifically the Cosine Laws as follows:
+
+We know the lenght of A and C. So we can just use the followwing math to calculate B <br>
+```
+
+```
 
 ##### Inverse Orientation Kinematics
 To calculate the rotation matrix from 0 to 3 the operation is defined by the following equation: <br>
