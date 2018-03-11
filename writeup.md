@@ -113,7 +113,7 @@ To simplify the translation I combine the last three joints (4, 5, and 6) at joi
 
 **Link Twist:** alpha(i-1) = angle from Z(i-1) to Z(i) measured about Xi-1 using right hand rule
 
-**Joint Angle:** theta(i) = angle from X(i-1) to X(i) measured about Zi using right hand rule. all joint angles will be zero at initial Robot state in KR210 except joint 2 which has a -90 degree constant offset between X(1) and X(2).
+**Joint Angle:** theta(i) = angle from X(i-1) to X(i) measured about Zi using right hand rule. all joint angles will be zero at initial Robot state in KR210 except joint 2 which has a - 90-degree constant offset between X(1) and X(2).
 
 **Gripper frame:** is the end point is the focal point for the Kinematic. It is displaced from Frame 6 by a translation along Z(6).
 
@@ -222,15 +222,15 @@ If we substitute zero for all thetas, we get a matrix representing the origin po
 
 #### 3. Decouple Inverse Kinematics problem into Inverse Position Kinematics and inverse Orientation Kinematics; doing so derive the equations to calculate all individual joint angles.
 
-Since the last three joints in the Kuka KR210 are revolute and their joint axes intersecpt at a single point, we have a spherical wrist with joint 5 and this is our common intesection point which we call the wrist center. This allows us to kinematically decouple the IK problem into Inverse Position and Inverse Orientation. 
+Since the last three joints in the Kuka KR210 are revolute and their joint axes intersect at a single point, we have a spherical wrist with joint 5, and this is our common intersection point which we call the wrist center. This allows us to kinematically decouple the IK problem into Inverse Position and Inverse Orientation. 
 
 
-In summary we doing the following:
+In summary, we doing the following:
 1. <b>Inverse Position Kinematics</b> - Find the first 3 joint angles (counting from the base) from the pose position  
-1. <b>Inverse Orientation Kinematics</b> - Find the remaining 3 wrist joint angles from the pose orientation.
+1. <b>Inverse Orientation Kinematics</b> - Find the remaining three wrist joint angles from the pose orientation.
 
 ##### Inverse Position Kinematics
-To obtain the position of the wrist center we can use the transaformation matrix we defined above. As it was done on the course explanation I simplfiy the homogenous transform as follows:<br>
+To obtain the position of the wrist center, we can use the transformation matrix we defined above. As it was done on the course explanation I simplify the homogeneous transform as follows:<br>
 ![homogenous transform][image15]
 
 <b>l</b>, <b>m</b>, and <b>n</b> are orthonormal vectors representing the end-factor orientation along  X, Y, Z axes of the local corordinate frame.
@@ -239,21 +239,21 @@ Since n is the vector along the z_axis of the gripper_link, we can say the follo
 ![equations][image16] <br> 
 
 Where 
-Px, Py, Pz = end-factor poitions 
-<br>Wx, Wy Wz = writst positions
+Px, Py, Pz = end-factor positions 
+<br>Wx, Wy Wz = wrist positions
 <br>d6 = DH Table parameter
-<br>l = end-factor lenght
+<br>l = end-factor length
 <br>
 To calculate <b>nx</b>, <b>ny</b>, <b>nz</b>, we need to correct for the difference between the URDF and the DH reference frames for the end-factor. 
 <br>
 ###### Correction Rotation Matrix
-Since the orientation of the gripper is differnent in the URDF and DH Parameters defnitions we need to perfrom a correction so that we can compare the homogeneous ransform between the base link and the gripper link. <br>
-This problem us visually shown here: <br>
+Since the orientation of the gripper is different in the URDF and DH Parameters definitions, we need to perform a correction so that we can compare the homogeneous transform between the base link and the gripper link. <br>
+This problem is visually is shown here: <br>
 ![Gripper Ref Frame 1][image5]
 <br>
-To resolve this you need to create a correction rotation matrix that is composed of a rotation on the z-axis by 180 degrees followed by rotation on the Y axis by -90 degrees.
+To resolve this, you need to create a correction rotation matrix that is composed of a rotation on the z-axis by 180 degrees followed by rotation on the Y axis by -90 degrees.
 <br>
-Once the correctional ratation matirx is defined, next calcualted the end-factor pose with respect the the <code>base link</code>. There are various considerations and conventions that need to be looked at regarding Euler angles, and how to shoose the correct conventions. I'll do a disservices to that mateial if i try to explain all he convenstions but I will attempt to provide the sailent points in side note below. 
+Once the correctional rotation matrix is defined, next calculated the end-factor pose with respect the <code>base link</code>. There are various considerations and conventions that need to be looked at regarding Euler angles, and how to choose the correct conventions. I'll do a disservice to that material if I try to explain all he conventions but I will attempt to provide the salient points in the side note below. 
 <br>
 <hr>
  <b>Side Note:</b> Compositions of Rotations
@@ -261,7 +261,7 @@ Once the correctional ratation matirx is defined, next calcualted the end-factor
 1.1 Extrinsic rotations are performed about the fixed world references frame
 1.1 Intrinsic rotations are performed about the coordinate system as rotated by the previous operation. 
 <br>
-This is was the transformation matracies look like for extrinsic vs intrinsic 
+This is the transformation matrices look like for extrinsic vs. intrinsic 
 <br>
 
 ![IntrinsicVsEntrinsicMatrices][image21]
@@ -278,7 +278,7 @@ Rrpy = Rot(Z, yaw) * Rot(Y, pitch) * Rot(X, roll) * R_corr
 ```
 <br> where R_corr is the Correction Rotation Matrix
 
-Since we need roll, pitch and yaw we need to use the ``` transformations.py ``` module from the TF package to get these values since ROS returns then in quaternions. <br>
+Since we need roll, pitch, and yaw we need to use the ``` transformations.py ``` module from the TF package to get these values since ROS returns than in quaternions. <br>
 
 We then extract <b>nx</b>, <b>ny</b>, <b>nz</b> values from this Rrpy matrix to obtain the wrist cneter position. Once we have the wrist center poisiton. <br>
 ![Gripper rotation eq][image7]
@@ -293,15 +293,15 @@ Where labels 2, 3 and WC are Joint 2, Joint 3, and the Wrist Center, respectivel
 By projecting the joints onto the z-y plane corresponding to the world reference frame, you can visualize a triangle between the three. From your DH parameters, you can calculate the distance between each joint above.
 <br>
 
-Once the wrist center is calculated we can then calcualte the first joint using a simple arch tan function e.g. <br>
+Once the wrist center is calculated, we can then calculate the first joint using a simple arch tan function e.g. <br>
 ![archtan eq][image9]
 
-To calculate joints 2 and 3 we use trignometry specifically the Cosine Laws as follows:
+To calculate joints 2 and three we use trigonometry specifically the Cosine Laws as follows:
 
-We know the lenght of A and C. So we can just use the followwing math to calculate B <br>
+We know the length of A and C. So we can just use the following math to calculate B <br>
 ![3 side equation][image18]
 
-Once we have all the sides of the triangle we can use law of cosines as follow to calculate theta 2 and 3 <br>
+Once we have all the sides of the triangle, we can use the law of cosines as follow to calculate theta 2 and 3 <br>
 ![law of cosines][image19]
 <br>
 ##### Inverse Orientation Kinematics
@@ -314,16 +314,16 @@ Since the overall RPY rotation from base_link to gripper_link must be equal to t
 ```
 R0_6 = R_ee
 ```
-R_ee is the homegenous RPY rotation between base and gripper link.
+R_ee is the homogenous RPY rotation between the base and gripper link.
 
-We then substitute the values we calculated for 𝜃1, 𝜃2, & 𝜃3 into the respective transformation matrices and pre-multiply boths sides by inverse of R0_3. This gives us: <br>
+We then substitute the values we calculated for 𝜃1, 𝜃2, & 𝜃3 into the respective transformation matrices and pre-multiply both sides by the inverse of R0_3. This gives us: <br>
 ```
 R3_6 = inv(R0_3) * R_ee
 ```
 
 ![archtan eq][image11]
 
-Inverting a matrix is complex and can be numerically unstable. To avoid this issue we use the principle that rotation matrices are orthogonal and the transpose is equal to it inverse.
+Inverting a matrix is complex and can be numerically unstable. To avoid this issue, we use the principle that rotation matrices are orthogonal and the transpose is equal to it inverse.
 ![archtan eq][image12]
 
 The resultant matrix on the RHS (Right Hand Side of the equation) does not have any variables after substituting the joint angle values, and hence comparing LHS (Left Hand Side of the equation) with RHS will result in equations for theta 4 (𝜃4), theta5(𝜃5) and theta6 (𝜃6).
@@ -396,20 +396,20 @@ All my Kinematics code is in the following file `/kuka_arm/scripts/Kinematics.py
 ** Using the R_x, R_y and R_z matrices and R_ee it calculates the WC
 * After the WC is calculated the calculate thetas function is called  ' kinematics.calculate_thetas(WC, T0_1, T1_2, T2_3, R_ee, q1, q2, q3, q4, q5, q6, q7)'. Refer to the code for more details and the math used is described in 3 above.
 ** The code calculates theta 1, 2 & 3 first
-** After that the theta 4, 5, 6 is calculated.
-** Theta 4, 6 was calculated based on what the value of theta 5 to find the best angles for 4 and 6.   
+** After that the theta 4, 5, six is calculated.
+** Theta 4, six was calculated based on what the value of theta 5 to find the best angles for 4 and 6.   
 
 ##### Result Discussion 
-What an amazing thing to see it pick up the object and place it in the bin. In my two runs of the code, i was able to successfully pickup 8/10 objects. 
+What an amazing thing to see it pick up the object and place it in the bin. In my two runs of the code, I was able to successfully pickup 8/10 objects. 
 
-###### Here are picture where i have a run with 9 out of 10 in the bin
+###### Here are pictures where I have a run with 9 out of 10 in the bin
 
 ![9 out of 10 with one on the floor ][image14]
 <br>
 ![9 out of 10 in bin][image13] 
 ##### Areas of Improvement
-1. My arm arrive at the correct point everytime but the route it takes to get there is sometimes really odd and hence it can take longer than expected to get into positon
+1. My arm arrive at the correct point every time but the route it takes to get there is sometimes really odd, and hence it can take longer than expected to get into postion
 1. This also causes the arm to knock over objects 
-1. I need to investigate this as I really don't understand why this is happening.
-1. The code also runs really slowly but when i run the IK_debug my code runs pretty fast. So i'm not sure if this is an issue with the VM. However i can improve the perfomace using numpy but i need to be careful as i should palce care to ensure i still have good accuracy.  
+1. I need to investigate this as I don't understand why this is happening.
+1. The code also runs slowly, but when I run the IK_debug, my code runs pretty fast. So I'm not sure if this is an issue with the VM. However, i can improve the performance using numpy, but I need to be careful as I should place care to ensure I still have good accuracy.  
 
