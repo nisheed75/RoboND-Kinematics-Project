@@ -24,6 +24,7 @@ Nisheed Rama
 [image17]: /misc_images/l21-l-inverse-kinematics-new-design-fixed.png
 [image18]: /misc_images/3side_eq.png
 [image19]: /misc_images/law_of_cos.png
+[image20]: /images/triangle.png
 ### Environment Setup
 
 #### Prerequisites
@@ -250,7 +251,7 @@ This problem us visually shown here: <br>
 <br>
 To resolve this you need to create a correction rotation matrix that is composed of a rotation on the z-axis by 180 degrees followed by rotation on the Y axis by -90 degrees.
 <br>
-Once the correctional ratation matirx is defined, next calcualted the end-factor pose with respect the the <code>base link</code>. There are various considerations and conventions that need to be looked at regarding Euler angles, and how to shoose the correct conventions. I'll do a dis services to that mateial if i try to explain it all but i will attempt to provide the sailent points in side note below. 
+Once the correctional ratation matirx is defined, next calcualted the end-factor pose with respect the the <code>base link</code>. There are various considerations and conventions that need to be looked at regarding Euler angles, and how to shoose the correct conventions. I'll do a disservices to that mateial if i try to explain all he convenstions but I will attempt to provide the sailent points in side note below. 
 
 ###### Side Note: Compositions of Rotations
 
@@ -268,6 +269,7 @@ We then extract <b>nx</b>, <b>ny</b>, <b>nz</b> values from this Rrpy matrix to 
 
 We can calculate theta 1, 2 & 3 the math below maths. The picture below presents a visual representation of the the problem.<br>
 ![joint2,3,WC][image17]
+![triangle applied to my kuka scematic][image20]
 <br>
 Where labels 2, 3 and WC are Joint 2, Joint 3, and the Wrist Center, respectively. 
 
@@ -286,11 +288,28 @@ Once we have all the sides of the triangle we can use law of cosines as follow t
 ![law of cosines][image19]
 <br>
 ##### Inverse Orientation Kinematics
-To calculate the rotation matrix from 0 to 3 the operation is defined by the following equation: <br>
+Here we are trying to find the final three angles theta 4 (𝜃4), theta5(𝜃5) and theta6 (𝜃6): <br>
+Using the DH transforms we can obtain the resultant rotation :
+```
+R0_6 = R0_1R1_2R2_3R3_4R4_5*R5_6
+```
+Since the overall RPY rotation from base_link to gripper_link must be equal to the product of individual rotations (R0_6), the following is true: <br>
+```
+R0_6 = R_ee
+```
+R_ee is the homegenous RPY rotation between base and gripper link.
+
+We then substitute the values we calculated for 𝜃1, 𝜃2, & 𝜃3 into the respective transformation matrices and pre-multiply boths sides by inverse of R0_3. This gives us: <br>
+```
+R3_6 = inv(R0_3) * R_ee
+```
+
 ![archtan eq][image11]
 
 Inverting a matrix is complex and can be numerically unstable. To avoid this issue we use the principle that rotation matrices are orthogonal and the transpose is equal to it inverse.
 ![archtan eq][image12]
+
+The resultant matrix on the RHS (Right Hand Side of the equation) does not have any variables after substituting the joint angle values, and hence comparing LHS (Left Hand Side of the equation) with RHS will result in equations for theta 4 (𝜃4), theta5(𝜃5) and theta6 (𝜃6).
 
 ##### Here is the code that shows how each angle is calculated
 Theta 1 `theta1`
