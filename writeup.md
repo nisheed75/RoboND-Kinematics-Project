@@ -25,7 +25,8 @@ Nisheed Rama
 [image18]: /misc_images/3side_eq.png
 [image19]: /misc_images/law_of_cos.png
 [image20]: /images/triangle.png
-[image21]: /misc_images/intrinsicVextrinsic.png
+[image21]: /misc_images/law_of_cos.png
+
 ### Environment Setup
 
 #### Prerequisites
@@ -253,7 +254,7 @@ This problem us visually shown here: <br>
 To resolve this you need to create a correction rotation matrix that is composed of a rotation on the z-axis by 180 degrees followed by rotation on the Y axis by -90 degrees.
 <br>
 Once the correctional ratation matirx is defined, next calcualted the end-factor pose with respect the the <code>base link</code>. There are various considerations and conventions that need to be looked at regarding Euler angles, and how to shoose the correct conventions. I'll do a disservices to that mateial if i try to explain all he convenstions but I will attempt to provide the sailent points in side note below. 
-
+---
 ###### Side Note: Compositions of Rotations
 1. There are two types of rotation systems:
 1.1 Extrinsic rotations are performed about the fixed world references frame
@@ -261,10 +262,14 @@ Once the correctional ratation matirx is defined, next calcualted the end-factor
 <br>
 This is was the transformation matracies look like for extrinsic vs intrinsic 
 <br>
+
 ![IntrinsicVsEntrinsicMatrices][image21]
+
 <br>
 Last key point to close the side bar is Rotation do not follow the commutative property of multiplication. So the order of matrix multiplcation matters.
 <br>
+<br>
+---
 One such convention is the x-y-z extrinsic rotations. Taking this convension our roation matrix will be as follows
 ```
 Rrpy = Rot(Z, yaw) * Rot(Y, pitch) * Rot(X, roll) * R_corr
