@@ -25,7 +25,7 @@ Nisheed Rama
 [image18]: /misc_images/3side_eq.png
 [image19]: /misc_images/law_of_cos.png
 [image20]: /images/triangle.png
-[image21]: /misc_images/law_of_cos.png
+[image21]: /misc_images/intrinsicVextrinsic.png
 
 ### Environment Setup
 
@@ -254,6 +254,7 @@ This problem us visually shown here: <br>
 To resolve this you need to create a correction rotation matrix that is composed of a rotation on the z-axis by 180 degrees followed by rotation on the Y axis by -90 degrees.
 <br>
 Once the correctional ratation matirx is defined, next calcualted the end-factor pose with respect the the <code>base link</code>. There are various considerations and conventions that need to be looked at regarding Euler angles, and how to shoose the correct conventions. I'll do a disservices to that mateial if i try to explain all he convenstions but I will attempt to provide the sailent points in side note below. 
+<br>
 ---
 ###### Side Note: Compositions of Rotations
 1. There are two types of rotation systems:
@@ -270,6 +271,7 @@ Last key point to close the side bar is Rotation do not follow the commutative p
 <br>
 <br>
 ---
+<br>
 One such convention is the x-y-z extrinsic rotations. Taking this convension our roation matrix will be as follows
 ```
 Rrpy = Rot(Z, yaw) * Rot(Y, pitch) * Rot(X, roll) * R_corr
@@ -284,7 +286,8 @@ We then extract <b>nx</b>, <b>ny</b>, <b>nz</b> values from this Rrpy matrix to 
 We can calculate theta 1, 2 & 3 the math below maths. The picture below presents a visual representation of the the problem.<br>
 ![joint2,3,WC][image17]
 ![triangle applied to my kuka scematic][image20]
-<br>
+
+
 Where labels 2, 3 and WC are Joint 2, Joint 3, and the Wrist Center, respectively. 
 
 By projecting the joints onto the z-y plane corresponding to the world reference frame, you can visualize a triangle between the three. From your DH parameters, you can calculate the distance between each joint above.
